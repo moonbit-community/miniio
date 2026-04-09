@@ -1,4 +1,41 @@
 ///|
+fn[X] with_closed_fd(fd : Fd, work : (Fd) -> X raise Errno) -> X raise Errno {
+  try work(fd) catch {
+    err =>
+      try fd.fd_close() catch {
+        close_err => raise close_err
+      } noraise {
+        _ => raise err
+      }
+  } noraise {
+    value => {
+      fd.fd_close()
+      value
+    }
+  }
+}
+
+///|
+fn[X] with_closed_file(
+  file : File,
+  work : (File) -> X raise Errno,
+) -> X raise Errno {
+  try work(file) catch {
+    err =>
+      try file.close() catch {
+        close_err => raise close_err
+      } noraise {
+        _ => raise err
+      }
+  } noraise {
+    value => {
+      file.close()
+      value
+    }
+  }
+}
+
+///|
 fn path_open_ffi(
   dirfd : Int,
   dirflags : UInt,
@@ -263,38 +300,39 @@ pub fn readdir(
     raise Inval
   }
   let fd = open_dir(path)
-  defer ignore(try? fd.fd_close())
-  let result : Array[DirEntry] = []
-  let mut cookie : DirCookie = DirCookie(0)
-  let mut current_size : Int = buffer_size
-  while true {
-    let (entries, more) = fd.fd_readdir(
-      cookie~,
-      buffer=Bytes::make(current_size, 0),
-    )
-    if entries.length() == 0 {
-      if more {
-        current_size = current_size * 2
-        if current_size > 1_048_576 {
-          raise Range
+  with_closed_fd(fd, fd => {
+    let result : Array[DirEntry] = []
+    let mut cookie : DirCookie = DirCookie(0)
+    let mut current_size : Int = buffer_size
+    while true {
+      let (entries, more) = fd.fd_readdir(
+        cookie~,
+        buffer=Bytes::make(current_size, 0),
+      )
+      if entries.length() == 0 {
+        if more {
+          current_size = current_size * 2
+          if current_size > 1_048_576 {
+            raise Range
+          }
+          continue
         }
-        continue
+        break
       }
-      break
-    }
-    for entry in entries {
-      let (name, dirent) = entry
-      if name == "." || name == ".." {
-        continue
+      for entry in entries {
+        let (name, dirent) = entry
+        if name == "." || name == ".." {
+          continue
+        }
+        result.push({ name, kind: dirent.d_type.to_entry_kind() })
       }
-      result.push({ name, kind: dirent.d_type.to_entry_kind() })
+      cookie = entries[entries.length() - 1].1.d_next
+      if !more {
+        break
+      }
     }
-    cookie = entries[entries.length() - 1].1.d_next
-    if !more {
-      break
-    }
-  }
-  result
+    result
+  })
 }
 
 ///|
@@ -312,8 +350,7 @@ pub fn readdir_names(
 ///|
 pub fn read_file(path : StringView) -> Bytes raise Errno {
   let file = open_read(path)
-  defer ignore(try? file.close())
-  file.read_all()
+  with_closed_file(file, file => file.read_all())
 }
 
 ///|
@@ -325,8 +362,7 @@ pub fn write_file(
   truncate? : Bool = false,
 ) -> Unit raise Errno {
   let file = open_write(path, append~, create~, truncate~)
-  defer ignore(try? file.close())
-  file.write_all(data)
+  with_closed_file(file, file => file.write_all(data))
 }
 
 ///|

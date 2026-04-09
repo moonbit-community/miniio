@@ -1,4 +1,24 @@
 ///|
+fn[X] with_closed_file(
+  file : File,
+  work : (File) -> X raise Errno,
+) -> X raise Errno {
+  try work(file) catch {
+    err =>
+      try file.close() catch {
+        close_err => raise close_err
+      } noraise {
+        _ => raise err
+      }
+  } noraise {
+    value => {
+      file.close()
+      value
+    }
+  }
+}
+
+///|
 pub fn open(
   path : StringView,
   mode? : Mode = ReadOnly,
@@ -56,7 +76,8 @@ pub fn rmdir(path : StringView, recursive? : Bool = false) -> Unit raise Errno {
     for entry in readdir(path, include_hidden=true, sort=false) {
       let entry_path = path.to_string() + "/" + entry
       remove(entry_path) catch {
-        _ => ()
+        Notempty => rmdir(entry_path, recursive=true)
+        e => raise e
       }
     }
   }
@@ -66,8 +87,7 @@ pub fn rmdir(path : StringView, recursive? : Bool = false) -> Unit raise Errno {
 ///|
 pub fn read_file(path : StringView) -> Bytes raise Errno {
   let file = open(path, mode=ReadOnly)
-  defer ignore(try? file.close())
-  file.read_all()
+  with_closed_file(file, file => file.read_all())
 }
 
 ///|
@@ -79,6 +99,5 @@ pub fn write_file(
   truncate? : Bool = false,
 ) -> Unit raise Errno {
   let file = open(path, mode=WriteOnly, append~, create~, truncate~)
-  defer ignore(try? file.close())
-  file.write_all(data)
+  with_closed_file(file, file => file.write_all(data))
 }
