@@ -1,10 +1,14 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "local/minimum/io"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
 
 // Errors
-pub(all) suberror ReaderClosed derive(Show, ToJson)
+pub(all) suberror ReaderClosed derive(ToJson, @debug.Debug)
 
 // Types and methods
 type ReaderBuffer

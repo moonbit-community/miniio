@@ -11,7 +11,7 @@ pub(open) trait Reader {
 }
 
 ///|
-pub(all) suberror ReaderClosed derive(Show, ToJson)
+pub(all) suberror ReaderClosed derive(Debug, ToJson)
 
 ///|
 impl Reader with read_sync(

@@ -3,7 +3,7 @@ pub(all) enum SeekFrom {
   Start
   Current
   End
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 fn SeekFrom::to_raw(self : SeekFrom) -> @raw.SeekFrom {
@@ -19,7 +19,7 @@ pub(all) enum Mode {
   ReadOnly
   WriteOnly
   ReadWrite
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 fn Mode::to_raw(self : Mode) -> @raw.Mode {
@@ -109,7 +109,95 @@ pub(all) suberror Errno {
   Txtbsy
   Xdev
   Notcapable
-} derive(Eq, Show)
+} derive(Eq, Debug)
+
+///|
+pub impl Show for Errno with to_string(self) {
+  match self {
+    Success => "Success"
+    TooBig => "TooBig"
+    Acces => "Acces"
+    Addrinuse => "Addrinuse"
+    Addrnotavail => "Addrnotavail"
+    Afnosupport => "Afnosupport"
+    Again => "Again"
+    Already => "Already"
+    Badf => "Badf"
+    Badmsg => "Badmsg"
+    Busy => "Busy"
+    Canceled => "Canceled"
+    Child => "Child"
+    Connaborted => "Connaborted"
+    Connrefused => "Connrefused"
+    Connreset => "Connreset"
+    Deadlock => "Deadlock"
+    Destaddrreq => "Destaddrreq"
+    Dom => "Dom"
+    Dquot => "Dquot"
+    Exist => "Exist"
+    Fault => "Fault"
+    Fbig => "Fbig"
+    Hostunreach => "Hostunreach"
+    Idrm => "Idrm"
+    Ilseq => "Ilseq"
+    Inprogress => "Inprogress"
+    Intr => "Intr"
+    Inval => "Inval"
+    IO => "IO"
+    Isconn => "Isconn"
+    Isdir => "Isdir"
+    Loop => "Loop"
+    Mfile => "Mfile"
+    Mlink => "Mlink"
+    Msgsize => "Msgsize"
+    Multihop => "Multihop"
+    Nametoolong => "Nametoolong"
+    Netdown => "Netdown"
+    Netreset => "Netreset"
+    Netunreach => "Netunreach"
+    Nfile => "Nfile"
+    Nobufs => "Nobufs"
+    Nodev => "Nodev"
+    Noent => "Noent"
+    Noexec => "Noexec"
+    Nolck => "Nolck"
+    Nolink => "Nolink"
+    Nomem => "Nomem"
+    Nomsg => "Nomsg"
+    Noprotoopt => "Noprotoopt"
+    Nospc => "Nospc"
+    Nosys => "Nosys"
+    Notconn => "Notconn"
+    Notdir => "Notdir"
+    Notempty => "Notempty"
+    Notrecoverable => "Notrecoverable"
+    Notsock => "Notsock"
+    Notsup => "Notsup"
+    Notty => "Notty"
+    Nxio => "Nxio"
+    Overflow => "Overflow"
+    Ownerdead => "Ownerdead"
+    Perm => "Perm"
+    Pipe => "Pipe"
+    Proto => "Proto"
+    Protonosupport => "Protonosupport"
+    Prototype => "Prototype"
+    Range => "Range"
+    Rofs => "Rofs"
+    Spipe => "Spipe"
+    Srch => "Srch"
+    Stale => "Stale"
+    Timedout => "Timedout"
+    Txtbsy => "Txtbsy"
+    Xdev => "Xdev"
+    Notcapable => "Notcapable"
+  }
+}
+
+///|
+pub impl Show for Errno with output(self, logger) {
+  logger.write_string(self.to_string())
+}
 
 ///|
 fn Errno::from_raw(errno : @raw.Errno) -> Errno {

@@ -1,6 +1,10 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "local/minimum/internal/raw"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
 pub fn args() -> Array[String] raise Errno
 
@@ -117,18 +121,18 @@ pub(all) suberror Errno {
   Txtbsy
   Xdev
   Notcapable
-} derive(Eq, Show)
+} derive(Eq, @debug.Debug)
 
 // Types and methods
-type DirCookie derive(Eq, Show)
+type DirCookie derive(Eq, @debug.Debug)
 
-type DirEnt derive(Eq, Show)
+type DirEnt derive(Eq, @debug.Debug)
 
-type DirEntry derive(Eq, Show)
+type DirEntry derive(Eq, @debug.Debug)
 pub fn DirEntry::kind(Self) -> EntryKind
 pub fn DirEntry::name(Self) -> String
 
-type DirNamlen derive(Eq, Show)
+type DirNamlen derive(Eq, @debug.Debug)
 
 pub(all) enum EntryKind {
   Unknown
@@ -138,13 +142,13 @@ pub(all) enum EntryKind {
   Socket
   BlockDevice
   CharDevice
-} derive(Eq, Show)
+} derive(Eq, @debug.Debug)
 
-type Fd derive(Eq, Show)
+type Fd derive(Eq, @debug.Debug)
 
-type FdFlag derive(Eq, Show)
+type FdFlag derive(Eq, @debug.Debug)
 
-type FdFlags derive(Eq, Show)
+type FdFlags derive(Eq, @debug.Debug)
 
 type File
 pub fn File::close(Self) -> Unit raise Errno
@@ -156,43 +160,43 @@ pub fn File::write_all(Self, BytesView) -> Unit raise Errno
 pub fn File::write_once(Self, BytesView) -> Int raise Errno
 pub fn File::write_text(Self, StringView) -> Unit raise Errno
 
-type FileDelta derive(Eq, Show)
+type FileDelta derive(Eq, @debug.Debug)
 
-type FileSize derive(Eq, Show)
+type FileSize derive(Eq, @debug.Debug)
 
-type FileType derive(Eq, Show)
+type FileType derive(Eq, @debug.Debug)
 
-type Inode derive(Eq, Show)
+type Inode derive(Eq, @debug.Debug)
 
-type LookupFlags derive(Eq, Show)
+type LookupFlags derive(Eq, @debug.Debug)
 
 pub(all) enum Mode {
   ReadOnly
   WriteOnly
   ReadWrite
-} derive(Eq, Show)
+} derive(Eq, @debug.Debug)
 
-type OpenFlag derive(Eq, Show)
+type OpenFlag derive(Eq, @debug.Debug)
 
-type OpenFlags derive(Eq, Show)
+type OpenFlags derive(Eq, @debug.Debug)
 
-type PreStat derive(Eq, Show)
+type PreStat derive(Eq, @debug.Debug)
 
-type PreStat_dir derive(Eq, Show)
+type PreStat_dir derive(Eq, @debug.Debug)
 
-type Right derive(Eq, Show)
+type Right derive(Eq, @debug.Debug)
 
-type Rights derive(Eq, Show)
+type Rights derive(Eq, @debug.Debug)
 
 pub(all) enum SeekFrom {
   Start
   Current
   End
-} derive(Eq, Show)
+} derive(Eq, @debug.Debug)
 
-type Size derive(Eq, Show)
+type Size derive(Eq, @debug.Debug)
 
-type Whence derive(Eq, Show)
+type Whence derive(Eq, @debug.Debug)
 
 // Type aliases
 

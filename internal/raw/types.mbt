@@ -3,7 +3,7 @@ pub(all) enum SeekFrom {
   Start
   Current
   End
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 pub(all) enum EntryKind {
@@ -14,14 +14,14 @@ pub(all) enum EntryKind {
   Socket
   BlockDevice
   CharDevice
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 pub(all) enum Mode {
   ReadOnly
   WriteOnly
   ReadWrite
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 pub(all) suberror Errno {
@@ -102,7 +102,7 @@ pub(all) suberror Errno {
   Txtbsy
   Xdev
   Notcapable
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 fn Errno::from_value(value : UInt) -> Errno? {
@@ -189,25 +189,25 @@ fn Errno::from_value(value : UInt) -> Errno? {
 }
 
 ///|
-struct Size(UInt) derive(Eq, Show)
+struct Size(UInt) derive(Eq, Debug)
 
 ///|
-struct FileSize(UInt64) derive(Eq, Show)
+struct FileSize(UInt64) derive(Eq, Debug)
 
 ///|
-struct FileDelta(Int64) derive(Eq, Show)
+struct FileDelta(Int64) derive(Eq, Debug)
 
 ///|
-struct DirCookie(UInt64) derive(Eq, Show)
+struct DirCookie(UInt64) derive(Eq, Debug)
 
 ///|
-struct DirNamlen(UInt) derive(Eq, Show)
+struct DirNamlen(UInt) derive(Eq, Debug)
 
 ///|
-struct Inode(UInt64) derive(Eq, Show)
+struct Inode(UInt64) derive(Eq, Debug)
 
 ///|
-struct Rights(UInt64) derive(Eq, Show)
+struct Rights(UInt64) derive(Eq, Debug)
 
 ///|
 fn Rights::new() -> Rights {
@@ -222,7 +222,7 @@ enum Right {
   Fd_write
   Fd_readdir
   Fd_filestat_set_size
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 fn Right::value(self : Right) -> UInt64 {
@@ -242,7 +242,7 @@ fn Rights::set(self : Rights, right : Right) -> Rights {
 }
 
 ///|
-struct Fd(Int) derive(Eq, Show)
+struct Fd(Int) derive(Eq, Debug)
 
 ///|
 struct File {
@@ -263,7 +263,7 @@ enum Whence {
   Set
   Cur
   End
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 fn Whence::value(self : Whence) -> UInt {
@@ -293,7 +293,7 @@ enum FileType {
   Socket_dgram
   Socket_stream
   Symbolic_link
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 fn FileType::from_value(value : Int) -> FileType? {
@@ -330,13 +330,13 @@ struct DirEnt {
   d_ino : Inode
   d_namlen : DirNamlen
   d_type : FileType
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 struct DirEntry {
   name : String
   kind : EntryKind
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 pub fn DirEntry::name(self : DirEntry) -> String {
@@ -349,7 +349,7 @@ pub fn DirEntry::kind(self : DirEntry) -> EntryKind {
 }
 
 ///|
-struct FdFlags(UInt) derive(Eq, Show)
+struct FdFlags(UInt) derive(Eq, Debug)
 
 ///|
 fn FdFlags::new() -> FdFlags {
@@ -359,7 +359,7 @@ fn FdFlags::new() -> FdFlags {
 ///|
 enum FdFlag {
   Append
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 fn FdFlag::value(self : FdFlag) -> UInt {
@@ -374,7 +374,7 @@ fn FdFlags::set(self : FdFlags, flag : FdFlag) -> FdFlags {
 }
 
 ///|
-struct LookupFlags(UInt) derive(Eq, Show)
+struct LookupFlags(UInt) derive(Eq, Debug)
 
 ///|
 fn LookupFlags::new() -> LookupFlags {
@@ -382,7 +382,7 @@ fn LookupFlags::new() -> LookupFlags {
 }
 
 ///|
-struct OpenFlags(UInt) derive(Eq, Show)
+struct OpenFlags(UInt) derive(Eq, Debug)
 
 ///|
 fn OpenFlags::new() -> OpenFlags {
@@ -394,7 +394,7 @@ enum OpenFlag {
   Create
   Directory
   Trunc
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 fn OpenFlag::value(self : OpenFlag) -> UInt {
@@ -413,9 +413,9 @@ fn OpenFlags::set(self : OpenFlags, flag : OpenFlag) -> OpenFlags {
 ///|
 struct PreStat_dir {
   pr_name_len : Size
-} derive(Eq, Show)
+} derive(Eq, Debug)
 
 ///|
 enum PreStat {
   Dir(PreStat_dir)
-} derive(Eq, Show)
+} derive(Eq, Debug)

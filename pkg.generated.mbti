@@ -3,6 +3,7 @@ package "local/minimum"
 
 import {
   "local/minimum/io",
+  "moonbitlang/core/debug",
 }
 
 // Values
@@ -111,7 +112,8 @@ pub(all) suberror Errno {
   Txtbsy
   Xdev
   Notcapable
-} derive(Eq, Show)
+} derive(Eq, @debug.Debug)
+pub impl Show for Errno
 
 // Types and methods
 type File
@@ -128,13 +130,13 @@ pub(all) enum Mode {
   ReadOnly
   WriteOnly
   ReadWrite
-} derive(Eq, Show)
+} derive(Eq, @debug.Debug)
 
 pub(all) enum SeekFrom {
   Start
   Current
   End
-} derive(Eq, Show)
+} derive(Eq, @debug.Debug)
 
 // Type aliases
 
