@@ -1,0 +1,30 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "local/minimum/internal/ffi"
+
+// Values
+pub fn byte_array2ptr(FixedArray[Byte]) -> Int
+
+pub fn bytes2ptr(Bytes) -> Int
+
+pub fn free(Int) -> Unit
+
+pub fn load32(Int) -> Int
+
+pub fn load32_u(Int) -> UInt
+
+pub fn load64_u(Int) -> UInt64
+
+pub fn load8_u(Int) -> Int
+
+pub fn malloc(Int) -> Int
+
+pub fn store32(Int, Int) -> Unit
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

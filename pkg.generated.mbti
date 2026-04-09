@@ -1,0 +1,142 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "local/minimum"
+
+import {
+  "local/minimum/io",
+}
+
+// Values
+pub fn args_get() -> Array[String] raise Errno
+
+pub fn create(StringView) -> File raise Errno
+
+pub fn environ_get() -> Array[(String, String)] raise Errno
+
+pub fn mkdir(StringView) -> Unit raise Errno
+
+pub fn open(StringView, mode? : Mode, append? : Bool, create? : Bool, truncate? : Bool) -> File raise Errno
+
+pub fn read_file(StringView) -> Bytes raise Errno
+
+pub fn readdir(StringView, include_hidden? : Bool, sort? : Bool) -> Array[String] raise Errno
+
+pub fn remove(StringView) -> Unit raise Errno
+
+pub fn rmdir(StringView, recursive? : Bool) -> Unit raise Errno
+
+pub let stderr : File
+
+pub let stdin : File
+
+pub let stdout : File
+
+pub fn write_file(StringView, BytesView, append? : Bool, create? : Bool, truncate? : Bool) -> Unit raise Errno
+
+// Errors
+pub(all) suberror Errno {
+  Success
+  TooBig
+  Acces
+  Addrinuse
+  Addrnotavail
+  Afnosupport
+  Again
+  Already
+  Badf
+  Badmsg
+  Busy
+  Canceled
+  Child
+  Connaborted
+  Connrefused
+  Connreset
+  Deadlock
+  Destaddrreq
+  Dom
+  Dquot
+  Exist
+  Fault
+  Fbig
+  Hostunreach
+  Idrm
+  Ilseq
+  Inprogress
+  Intr
+  Inval
+  IO
+  Isconn
+  Isdir
+  Loop
+  Mfile
+  Mlink
+  Msgsize
+  Multihop
+  Nametoolong
+  Netdown
+  Netreset
+  Netunreach
+  Nfile
+  Nobufs
+  Nodev
+  Noent
+  Noexec
+  Nolck
+  Nolink
+  Nomem
+  Nomsg
+  Noprotoopt
+  Nospc
+  Nosys
+  Notconn
+  Notdir
+  Notempty
+  Notrecoverable
+  Notsock
+  Notsup
+  Notty
+  Nxio
+  Overflow
+  Ownerdead
+  Perm
+  Pipe
+  Proto
+  Protonosupport
+  Prototype
+  Range
+  Rofs
+  Spipe
+  Srch
+  Stale
+  Timedout
+  Txtbsy
+  Xdev
+  Notcapable
+} derive(Eq, Show)
+
+// Types and methods
+type File
+pub fn File::close(Self) -> Unit raise Errno
+pub fn File::read_all(Self, chunk_size? : Int) -> Bytes raise Errno
+pub fn File::seek(Self, Int64, from? : SeekFrom) -> UInt64 raise Errno
+pub fn File::tell(Self) -> UInt64 raise Errno
+pub fn File::write_all(Self, BytesView) -> Unit raise Errno
+pub fn File::write_text(Self, StringView) -> Unit raise Errno
+pub impl @io.Reader for File
+pub impl @io.Writer for File
+
+pub(all) enum Mode {
+  ReadOnly
+  WriteOnly
+  ReadWrite
+} derive(Eq, Show)
+
+pub(all) enum SeekFrom {
+  Start
+  Current
+  End
+} derive(Eq, Show)
+
+// Type aliases
+
+// Traits
+

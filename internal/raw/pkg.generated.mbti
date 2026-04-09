@@ -1,0 +1,200 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "local/minimum/internal/raw"
+
+// Values
+pub fn args() -> Array[String] raise Errno
+
+pub fn create(StringView) -> File raise Errno
+
+pub fn envs() -> Array[(String, String)] raise Errno
+
+pub fn mkdir(StringView) -> Unit raise Errno
+
+pub fn open(StringView, mode? : Mode, append? : Bool, create? : Bool, truncate? : Bool) -> File raise Errno
+
+pub fn open_read(StringView) -> File raise Errno
+
+pub fn open_write(StringView, append? : Bool, create? : Bool, truncate? : Bool) -> File raise Errno
+
+pub fn preopens() -> Array[String] raise Errno
+
+pub fn read_file(StringView) -> Bytes raise Errno
+
+pub fn readdir(StringView, buffer_size? : Int) -> Array[DirEntry] raise Errno
+
+pub fn readdir_names(StringView, buffer_size? : Int) -> Array[String] raise Errno
+
+pub fn remove_dir(StringView) -> Unit raise Errno
+
+pub fn remove_file(StringView) -> Unit raise Errno
+
+pub let stderr : File
+
+pub let stdin : File
+
+pub let stdout : File
+
+pub fn write_file(StringView, BytesView, append? : Bool, create? : Bool, truncate? : Bool) -> Unit raise Errno
+
+pub fn write_text_file(StringView, StringView, append? : Bool, create? : Bool, truncate? : Bool) -> Unit raise Errno
+
+// Errors
+pub(all) suberror Errno {
+  Success
+  TooBig
+  Acces
+  Addrinuse
+  Addrnotavail
+  Afnosupport
+  Again
+  Already
+  Badf
+  Badmsg
+  Busy
+  Canceled
+  Child
+  Connaborted
+  Connrefused
+  Connreset
+  Deadlock
+  Destaddrreq
+  Dom
+  Dquot
+  Exist
+  Fault
+  Fbig
+  Hostunreach
+  Idrm
+  Ilseq
+  Inprogress
+  Intr
+  Inval
+  IO
+  Isconn
+  Isdir
+  Loop
+  Mfile
+  Mlink
+  Msgsize
+  Multihop
+  Nametoolong
+  Netdown
+  Netreset
+  Netunreach
+  Nfile
+  Nobufs
+  Nodev
+  Noent
+  Noexec
+  Nolck
+  Nolink
+  Nomem
+  Nomsg
+  Noprotoopt
+  Nospc
+  Nosys
+  Notconn
+  Notdir
+  Notempty
+  Notrecoverable
+  Notsock
+  Notsup
+  Notty
+  Nxio
+  Overflow
+  Ownerdead
+  Perm
+  Pipe
+  Proto
+  Protonosupport
+  Prototype
+  Range
+  Rofs
+  Spipe
+  Srch
+  Stale
+  Timedout
+  Txtbsy
+  Xdev
+  Notcapable
+} derive(Eq, Show)
+
+// Types and methods
+type DirCookie derive(Eq, Show)
+
+type DirEnt derive(Eq, Show)
+
+type DirEntry derive(Eq, Show)
+pub fn DirEntry::kind(Self) -> EntryKind
+pub fn DirEntry::name(Self) -> String
+
+type DirNamlen derive(Eq, Show)
+
+pub(all) enum EntryKind {
+  Unknown
+  Regular
+  Directory
+  SymLink
+  Socket
+  BlockDevice
+  CharDevice
+} derive(Eq, Show)
+
+type Fd derive(Eq, Show)
+
+type FdFlag derive(Eq, Show)
+
+type FdFlags derive(Eq, Show)
+
+type File
+pub fn File::close(Self) -> Unit raise Errno
+pub fn File::read(Self, FixedArray[Byte], offset? : Int, max_len? : Int) -> Int raise Errno
+pub fn File::read_all(Self, chunk_size? : Int) -> Bytes raise Errno
+pub fn File::seek(Self, Int64, from? : SeekFrom) -> UInt64 raise Errno
+pub fn File::tell(Self) -> UInt64 raise Errno
+pub fn File::write_all(Self, BytesView) -> Unit raise Errno
+pub fn File::write_once(Self, BytesView) -> Int raise Errno
+pub fn File::write_text(Self, StringView) -> Unit raise Errno
+
+type FileDelta derive(Eq, Show)
+
+type FileSize derive(Eq, Show)
+
+type FileType derive(Eq, Show)
+
+type Inode derive(Eq, Show)
+
+type LookupFlags derive(Eq, Show)
+
+pub(all) enum Mode {
+  ReadOnly
+  WriteOnly
+  ReadWrite
+} derive(Eq, Show)
+
+type OpenFlag derive(Eq, Show)
+
+type OpenFlags derive(Eq, Show)
+
+type PreStat derive(Eq, Show)
+
+type PreStat_dir derive(Eq, Show)
+
+type Right derive(Eq, Show)
+
+type Rights derive(Eq, Show)
+
+pub(all) enum SeekFrom {
+  Start
+  Current
+  End
+} derive(Eq, Show)
+
+type Size derive(Eq, Show)
+
+type Whence derive(Eq, Show)
+
+// Type aliases
+
+// Traits
+

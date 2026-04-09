@@ -1,0 +1,6 @@
+import {
+  "local/minimum/internal/io_buffer" @io_buffer,
+  "moonbitlang/core/cmp",
+  "moonbitlang/core/encoding/utf8" @utf8,
+  "moonbitlang/core/json",
+}
