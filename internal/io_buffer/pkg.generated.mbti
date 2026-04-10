@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "local/minimum/internal/io_buffer"
+package "moonbit-community/miniwasi/internal/io_buffer"
 
 // Values
 

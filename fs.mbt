@@ -76,6 +76,52 @@ pub fn readdir(
 }
 
 ///|
+pub fn kind(path : StringView) -> FileKind raise Errno {
+  try {
+    ignore(readdir(path, include_hidden=true, sort=false))
+    Directory
+  } catch {
+    Notdir => {
+      let file = open(path, mode=ReadOnly)
+      file.close()
+      Regular
+    }
+    Acces | Perm =>
+      try {
+        let file = open(path, mode=ReadOnly)
+        file.close()
+        Regular
+      } catch {
+        Isdir => Directory
+        e => raise e
+      }
+    e => raise e
+  }
+}
+
+///|
+pub fn exists(path : StringView) -> Bool raise Errno {
+  try {
+    ignore(kind(path))
+    true
+  } catch {
+    Noent | Notdir => false
+    Acces | Perm => true
+    e => raise e
+  }
+}
+
+///|
+pub fn is_dir(path : StringView) -> Bool raise Errno {
+  kind(path) is Directory
+}
+
+///|
+pub fn is_file(path : StringView) -> Bool raise Errno {
+  kind(path) is Regular
+}
+
+///|
 pub fn rmdir(path : StringView, recursive? : Bool = false) -> Unit raise Errno {
   if recursive {
     for entry in readdir(path, include_hidden=true, sort=false) {

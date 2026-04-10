@@ -1,4 +1,4 @@
 import {
-  "local/minimum/internal/ffi",
+  "moonbit-community/miniwasi/internal/ffi",
   "moonbitlang/core/encoding/utf8" @encoding/utf8,
 }

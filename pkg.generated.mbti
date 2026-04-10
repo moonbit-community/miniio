@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "local/minimum"
+package "moonbit-community/miniwasi"
 
 import {
-  "local/minimum/io",
+  "moonbit-community/miniwasi/io",
   "moonbitlang/core/debug",
 }
 
@@ -12,6 +12,20 @@ pub fn args_get() -> Array[String] raise Errno
 pub fn create(StringView) -> File raise Errno
 
 pub fn environ_get() -> Array[(String, String)] raise Errno
+
+pub fn exists(StringView) -> Bool raise Errno
+
+pub fn exit(Int) -> Unit
+
+pub fn get_env_var(StringView) -> String? raise Errno
+
+pub fn get_env_vars() -> Map[String, String] raise Errno
+
+pub fn is_dir(StringView) -> Bool raise Errno
+
+pub fn is_file(StringView) -> Bool raise Errno
+
+pub fn kind(StringView) -> FileKind raise Errno
 
 pub fn mkdir(StringView) -> Unit raise Errno
 
@@ -125,6 +139,16 @@ pub fn File::write_all(Self, BytesView) -> Unit raise Errno
 pub fn File::write_text(Self, StringView) -> Unit raise Errno
 pub impl @io.Reader for File
 pub impl @io.Writer for File
+
+pub(all) enum FileKind {
+  Unknown
+  Regular
+  Directory
+  SymLink
+  Socket
+  BlockDevice
+  CharDevice
+} derive(Eq, @debug.Debug)
 
 pub(all) enum Mode {
   ReadOnly

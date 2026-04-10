@@ -1,4 +1,4 @@
 {
-  "name": "local/minimum",
+  "name": "moonbit-community/miniwasi",
   "preferred-target": "wasm"
 }

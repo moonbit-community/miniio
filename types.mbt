@@ -6,6 +6,17 @@ pub(all) enum SeekFrom {
 } derive(Eq, Debug)
 
 ///|
+pub(all) enum FileKind {
+  Unknown
+  Regular
+  Directory
+  SymLink
+  Socket
+  BlockDevice
+  CharDevice
+} derive(Eq, Debug)
+
+///|
 fn SeekFrom::to_raw(self : SeekFrom) -> @raw.SeekFrom {
   match self {
     Start => @raw.Start

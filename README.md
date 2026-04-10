@@ -7,7 +7,7 @@ Public API:
 
 - `args_get()`
 - `environ_get()`
-- `local/minimum/io::{Data, Reader, Writer}`
+- `moonbit-community/miniwasi/io::{Data, Reader, Writer}`
 - `stdin`, `stdout`, `stderr`
 - `open`, `create`
 - `File::close`
@@ -21,7 +21,7 @@ Public API:
 - `read_file`, `write_file`
 - `Errno`, `Mode`, `SeekFrom`
 
-After importing `local/minimum/io`, `File` also implements sync `Reader` and `Writer`,
+After importing `moonbit-community/miniwasi/io`, `File` also implements sync `Reader` and `Writer`,
 so partial reads and streamed writes are available without exposing raw preview1 calls.
 
 Internal only:
