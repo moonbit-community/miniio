@@ -17,7 +17,7 @@ pub fn mkdir(StringView) -> Unit raise Errno
 
 pub fn open(StringView, mode? : Mode, append? : Bool, create? : Bool, truncate? : Bool) -> File raise Errno
 
-pub fn read_file(StringView) -> Bytes raise Errno
+pub fn read_file(StringView) -> &@io.Data raise Errno
 
 pub fn readdir(StringView, include_hidden? : Bool, sort? : Bool) -> Array[String] raise Errno
 
@@ -31,7 +31,7 @@ pub let stdin : File
 
 pub let stdout : File
 
-pub fn write_file(StringView, BytesView, append? : Bool, create? : Bool, truncate? : Bool) -> Unit raise Errno
+pub fn write_file(StringView, &@io.Data, append? : Bool, create? : Bool, truncate? : Bool) -> Unit raise Errno
 
 // Errors
 pub(all) suberror Errno {

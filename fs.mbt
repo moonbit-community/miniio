@@ -48,6 +48,11 @@ pub fn mkdir(path : StringView) -> Unit raise Errno {
 pub fn remove(path : StringView) -> Unit raise Errno {
   wrap(() => @raw.remove_file(path)) catch {
     Isdir | Perm => wrap(() => @raw.remove_dir(path))
+    Acces =>
+      wrap(() => @raw.remove_dir(path)) catch {
+        Notdir => raise Acces
+        e => raise e
+      }
     e => raise e
   }
 }
@@ -85,7 +90,7 @@ pub fn rmdir(path : StringView, recursive? : Bool = false) -> Unit raise Errno {
 }
 
 ///|
-pub fn read_file(path : StringView) -> Bytes raise Errno {
+pub fn read_file(path : StringView) -> &@io.Data raise Errno {
   let file = open(path, mode=ReadOnly)
   with_closed_file(file, file => file.read_all())
 }
@@ -93,11 +98,11 @@ pub fn read_file(path : StringView) -> Bytes raise Errno {
 ///|
 pub fn write_file(
   path : StringView,
-  data : BytesView,
+  data : &@io.Data,
   append? : Bool = false,
   create? : Bool = false,
   truncate? : Bool = false,
 ) -> Unit raise Errno {
   let file = open(path, mode=WriteOnly, append~, create~, truncate~)
-  with_closed_file(file, file => file.write_all(data))
+  with_closed_file(file, file => file.write_all(data.binary()))
 }
