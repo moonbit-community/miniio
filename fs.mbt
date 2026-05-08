@@ -62,6 +62,11 @@ pub fn remove(path : StringView) -> Unit raise Errno {
 }
 
 ///|
+pub fn remove_file(path : StringView) -> Unit raise Errno {
+  wrap(() => @raw.remove_file(path))
+}
+
+///|
 pub fn readdir(
   path : StringView,
   include_hidden? : Bool = true,
@@ -146,19 +151,43 @@ pub fn read_file(path : StringView) -> &@io.Data raise Errno {
 }
 
 ///|
+fn default_create_mode(append : Bool, create_mode : CreateMode?) -> CreateMode {
+  match create_mode {
+    Some(mode) => mode
+    None if append => OpenOrCreate
+    None => CreateOrTruncate
+  }
+}
+
+///|
 pub fn write_file(
   path : StringView,
   data : &@io.Data,
   append? : Bool = false,
   create_mode? : CreateMode,
 ) -> Unit raise Errno {
-  let create_mode = match create_mode {
-    Some(mode) => mode
-    None if append => OpenOrCreate
-    None => CreateOrTruncate
-  }
+  let create_mode = default_create_mode(append, create_mode)
   let file = open(path, mode=WriteOnly, append~, create_mode~)
   with_closed_file(file, file => file.write_all(data.binary()))
+}
+
+///|
+pub fn copy_file(
+  src : StringView,
+  dst : StringView,
+  append? : Bool = false,
+  create_mode? : CreateMode,
+) -> Unit raise Errno {
+  let create_mode = default_create_mode(append, create_mode)
+  let src_file = open(src, mode=ReadOnly)
+  with_closed_file(src_file, src_file => {
+    let dst_file = open(dst, mode=WriteOnly, append~, create_mode~)
+    with_closed_file(dst_file, dst_file => {
+      dst_file.write_reader_sync(src_file) catch {
+        _ => raise IO
+      }
+    })
+  })
 }
 
 ///|
@@ -170,16 +199,31 @@ pub fn read_text_file(path : StringView) -> String raise Errno {
 }
 
 ///|
+pub fn read_json_file(path : StringView) -> Json raise Errno {
+  let data = read_file(path)
+  data.json() catch {
+    _ => raise IO
+  }
+}
+
+///|
 pub fn write_text_file(
   path : StringView,
   text : StringView,
   append? : Bool = false,
   create_mode? : CreateMode,
 ) -> Unit raise Errno {
-  let create_mode = match create_mode {
-    Some(mode) => mode
-    None if append => OpenOrCreate
-    None => CreateOrTruncate
-  }
+  let create_mode = default_create_mode(append, create_mode)
   write_file(path, text, append~, create_mode~)
+}
+
+///|
+pub fn write_json_file(
+  path : StringView,
+  json : Json,
+  append? : Bool = false,
+  create_mode? : CreateMode,
+) -> Unit raise Errno {
+  let create_mode = default_create_mode(append, create_mode)
+  write_file(path, json, append~, create_mode~)
 }

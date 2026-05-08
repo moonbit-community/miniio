@@ -12,7 +12,7 @@ fn write_line(line : String) -> Unit {
 
 ///|
 fn usage() -> Unit {
-  write_line("usage: cli_tools <cat|ls|tree> <path>")
+  write_line("usage: cli_tools <cat|cp|ls|tree> <path> [output]")
 }
 
 ///|
@@ -26,10 +26,17 @@ fn path_join(parent : String, name : String) -> String {
 
 ///|
 fn cat(path : String) -> Unit {
-  let text = @miniwasi.read_file(path).text() catch {
+  let text = @miniwasi.read_text_file(path) catch {
     err => abort("cat failed: \{err}")
   }
   write(text)
+}
+
+///|
+fn cp(src : String, dst : String) -> Unit {
+  @miniwasi.copy_file(src, dst) catch {
+    err => abort("cp failed: \{err}")
+  }
 }
 
 ///|
@@ -62,6 +69,7 @@ fn main {
   let path = args[2]
   match command {
     "cat" => cat(path)
+    "cp" => if args.length() == 4 { cp(path, args[3]) } else { usage() }
     "ls" => ls(path)
     "tree" => tree(path, "")
     _ => usage()

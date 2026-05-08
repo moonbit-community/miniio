@@ -14,8 +14,8 @@ fn animation_name(name : String?) -> String {
 }
 
 ///|
-fn inspect_lottie(json_text : String) -> String raise {
-  let animation = @parser.parse_animation(@json.parse(json_text))
+fn inspect_lottie(json : Json) -> String raise {
+  let animation = @parser.parse_animation(json)
   [
     "name=\{animation_name(animation.name)}",
     "size=\{animation.width}x\{animation.height}",
@@ -34,10 +34,10 @@ fn main {
   }
   let input = args[1]
   let output = args[2]
-  let json_text = @miniwasi.read_file(input).text() catch {
+  let json = @miniwasi.read_json_file(input) catch {
     err => abort("read failed: \{err}")
   }
-  let manifest = inspect_lottie(json_text) catch {
+  let manifest = inspect_lottie(json) catch {
     err => abort("parse failed: \{err}")
   }
   @miniwasi.write_text_file(output, manifest) catch {

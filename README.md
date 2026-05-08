@@ -1,7 +1,8 @@
-# minimum
+# miniwasi
 
-Minimal WASIp1 MoonBit module with a wrapped public API. The direct preview1-shaped
-calls stay internal.
+Portable WASIp1 SDK for MoonBit command-line tools and agent skills. It exposes
+a small, wrapped API over WASIp1 while keeping direct preview1-shaped calls
+internal.
 
 Public API:
 
@@ -17,11 +18,12 @@ Public API:
 - `File::write_text`
 - `File::seek`
 - `File::tell`
-- `mkdir`, `remove`, `rmdir`
+- `mkdir`, `remove_file`, `remove`, `rmdir`
 - `readdir`
 - `exists`, `kind`, `is_dir`, `is_file`
-- `read_file`, `write_file`
+- `read_file`, `write_file`, `copy_file`
 - `read_text_file`, `write_text_file`
+- `read_json_file`, `write_json_file`
 - `Errno`, `CreateMode`, `FileKind`, `Mode`, `SeekFrom`
 
 After importing `moonbit-community/miniwasi/io`, `File` also implements sync `Reader` and `Writer`,
@@ -49,11 +51,19 @@ Common file patterns:
 let text = @miniwasi.read_text_file("data/input.txt")
 @miniwasi.write_text_file("data/output.txt", text)
 @miniwasi.write_file("data/raw.bin", b"bytes", create_mode=CreateOrTruncate)
+@miniwasi.copy_file("data/input.txt", "data/copy.txt")
+
+let config = @miniwasi.read_json_file("data/config.json")
+@miniwasi.write_json_file("data/config.copy.json", config)
 
 let file = @miniwasi.open("data/log.txt", mode=WriteOnly, append=true)
 file.write_text("line\n")
 file.close()
 ```
+
+Use `remove_file(path)` when the path must be a file, `rmdir(path)` when it must
+be a directory, and `remove(path)` only when accepting either is intentional.
+More examples live in `README.mbt.md`; they are checked by `moon test`.
 
 WASIp1 paths are guest paths backed by explicit preopened directories. A program
 that reads `data/input.txt` should be run with a matching preopen, for example:
@@ -66,7 +76,7 @@ The repository root is a Moon workspace. It includes the module itself and
 separate example projects that use versioned dependencies, not local path
 dependencies:
 
-- `example/cli_tools`: small `cat`, `ls`, and `tree` commands.
+- `example/cli_tools`: small `cat`, `cp`, `ls`, and `tree` commands.
 - `example/lottie_manifest`: reads Lottie JSON with `cg-zhou/moon_lottie@0.3.0`
   and writes a text manifest. The renderer package is not used because it is
   `wasm-gc`-oriented.

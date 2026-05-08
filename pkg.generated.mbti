@@ -9,6 +9,8 @@ import {
 // Values
 pub fn args_get() -> Array[String] raise Errno
 
+pub fn copy_file(StringView, StringView, append? : Bool, create_mode? : CreateMode) -> Unit raise Errno
+
 pub fn create(StringView) -> File raise Errno
 
 pub fn environ_get() -> Array[(String, String)] raise Errno
@@ -33,11 +35,15 @@ pub fn open(StringView, mode? : Mode, append? : Bool, create_mode? : CreateMode)
 
 pub fn read_file(StringView) -> &@io.Data raise Errno
 
+pub fn read_json_file(StringView) -> Json raise Errno
+
 pub fn read_text_file(StringView) -> String raise Errno
 
 pub fn readdir(StringView, include_hidden? : Bool, sort? : Bool) -> Array[String] raise Errno
 
 pub fn remove(StringView) -> Unit raise Errno
+
+pub fn remove_file(StringView) -> Unit raise Errno
 
 pub fn rmdir(StringView, recursive? : Bool) -> Unit raise Errno
 
@@ -48,6 +54,8 @@ pub let stdin : File
 pub let stdout : File
 
 pub fn write_file(StringView, &@io.Data, append? : Bool, create_mode? : CreateMode) -> Unit raise Errno
+
+pub fn write_json_file(StringView, Json, append? : Bool, create_mode? : CreateMode) -> Unit raise Errno
 
 pub fn write_text_file(StringView, StringView, append? : Bool, create_mode? : CreateMode) -> Unit raise Errno
 

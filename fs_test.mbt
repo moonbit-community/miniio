@@ -116,6 +116,43 @@ test "read_file returns io data" {
 }
 
 ///|
+test "copy_file copies through reader and writer" {
+  let dir = "minimum_test_copy_file"
+  @miniwasi.remove(dir) catch {
+    Noent => ()
+    Notempty => @miniwasi.rmdir(dir, recursive=true)
+    e => raise e
+  }
+  @miniwasi.mkdir(dir)
+  defer ignore(try? @miniwasi.rmdir(dir, recursive=true))
+
+  let src = dir + "/src.txt"
+  let dst = dir + "/dst.txt"
+  @miniwasi.write_text_file(src, "copy me")
+  @miniwasi.copy_file(src, dst)
+  inspect(@miniwasi.read_text_file(dst), content="copy me")
+}
+
+///|
+test "json file helpers read and write json" {
+  let dir = "minimum_test_json_file"
+  @miniwasi.remove(dir) catch {
+    Noent => ()
+    Notempty => @miniwasi.rmdir(dir, recursive=true)
+    e => raise e
+  }
+  @miniwasi.mkdir(dir)
+  defer ignore(try? @miniwasi.rmdir(dir, recursive=true))
+
+  let path = dir + "/config.json"
+  @miniwasi.write_json_file(path, { "name": "miniwasi", "ok": true })
+  inspect(
+    @miniwasi.read_json_file(path).stringify(),
+    content="{\"name\":\"miniwasi\",\"ok\":true}",
+  )
+}
+
+///|
 test "remove and recursive rmdir delete created paths" {
   let dir = "minimum_test_remove"
   @miniwasi.remove(dir) catch {
@@ -133,7 +170,7 @@ test "remove and recursive rmdir delete created paths" {
   @miniwasi.write_file(nested_dir + "/child.txt", b"child")
   @miniwasi.write_file(nested_dir + "/.hidden", b"hidden")
 
-  @miniwasi.remove(file_path)
+  @miniwasi.remove_file(file_path)
   inspect(try? @miniwasi.remove(file_path), content="Err(Noent)")
 
   @miniwasi.rmdir(dir, recursive=true)
