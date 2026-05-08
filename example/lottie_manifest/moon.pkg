@@ -1,11 +1,15 @@
 import {
   "moonbit-community/miniwasi",
+  "cg-zhou/moon_lottie/lib/parser" @parser,
+  "moonbitlang/core/json",
 }
+
+supported_targets = "wasm"
 
 import {
 } for "test"
 
 options(
-  "is-main": true,
+  is_main: true,
   link: { "wasm": { "export-memory-name": "memory" } },
 )

@@ -7,6 +7,7 @@ Public API:
 
 - `args_get()`
 - `environ_get()`
+- `get_env_var()`, `get_env_vars()`
 - `moonbit-community/miniwasi/io::{Data, Reader, Writer}`
 - `stdin`, `stdout`, `stderr`
 - `open`, `create`
@@ -18,8 +19,9 @@ Public API:
 - `File::tell`
 - `mkdir`, `remove`, `rmdir`
 - `readdir`
+- `exists`, `kind`, `is_dir`, `is_file`
 - `read_file`, `write_file`
-- `Errno`, `Mode`, `SeekFrom`
+- `Errno`, `FileKind`, `Mode`, `SeekFrom`
 
 After importing `moonbit-community/miniwasi/io`, `File` also implements sync `Reader` and `Writer`,
 so partial reads and streamed writes are available without exposing raw preview1 calls.
@@ -36,15 +38,33 @@ Internal only:
 Still deliberately omitted:
 
 - async runtime and async I/O
-- metadata/stat helpers such as `exists`, `kind`, `mtime`
+- detailed metadata/stat helpers such as `mtime`, sizes, permissions, and file descriptor rights
 - symlink, rename, link, walk
-- generic `remove(path)` that needs file-type inspection
+- raw preview1-shaped public calls
+
+The repository root is a Moon workspace. It includes the module itself and
+separate example projects that use versioned dependencies, not local path
+dependencies:
+
+- `example/cli_tools`: small `cat`, `ls`, and `tree` commands.
+- `example/lottie_manifest`: reads Lottie JSON with `cg-zhou/moon_lottie@0.3.0`
+  and writes a text manifest. The renderer package is not used because it is
+  `wasm-gc`-oriented.
+- `example/morm_query`: writes SQL text using the synchronous query-builder
+  surface of `oboard/morm@0.3.12`. It does not use Morm's async database engine
+  APIs.
 
 Check:
 
 ```sh
-moon check
+moon check --target wasm
+moon test --target wasm
+deno task test
 ```
+
+The external package examples were validated with a recent Moon toolchain. The
+Deno tasks prepend `$HOME/.moon/bin` to `PATH` so they use that toolchain when
+it is installed.
 
 Run the demo package:
 

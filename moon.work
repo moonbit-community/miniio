@@ -1,0 +1,7 @@
+members = [
+  ".",
+  "./example/cli_tools",
+  "./example/lottie_manifest",
+  "./example/morm_query",
+]
+preferred_target = "wasm"

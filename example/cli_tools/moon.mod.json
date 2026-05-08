@@ -1,0 +1,8 @@
+{
+  "name": "moonbit-community/miniwasi-example-cli-tools",
+  "version": "0.1.0",
+  "deps": {
+    "moonbit-community/miniwasi": "0.1.0"
+  },
+  "preferred-target": "wasm"
+}

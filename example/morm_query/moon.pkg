@@ -1,11 +1,15 @@
 import {
   "moonbit-community/miniwasi",
+  "oboard/morm",
+  "oboard/morm/engine" @engine,
 }
+
+supported_targets = "wasm"
 
 import {
 } for "test"
 
 options(
-  "is-main": true,
+  is_main: true,
   link: { "wasm": { "export-memory-name": "memory" } },
 )
