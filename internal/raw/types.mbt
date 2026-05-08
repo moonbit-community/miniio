@@ -393,6 +393,7 @@ fn OpenFlags::new() -> OpenFlags {
 enum OpenFlag {
   Create
   Directory
+  Excl
   Trunc
 } derive(Eq, Debug)
 
@@ -401,6 +402,7 @@ fn OpenFlag::value(self : OpenFlag) -> UInt {
   match self {
     Create => 1
     Directory => 2
+    Excl => 4
     Trunc => 8
   }
 }
@@ -408,6 +410,28 @@ fn OpenFlag::value(self : OpenFlag) -> UInt {
 ///|
 fn OpenFlags::set(self : OpenFlags, flag : OpenFlag) -> OpenFlags {
   self.0 | flag.value()
+}
+
+///|
+pub(all) enum CreateMode {
+  OpenExisting
+  TruncateExisting
+  OpenOrCreate
+  CreateOrTruncate
+  CreateNew
+} derive(Eq, Debug)
+
+///|
+fn CreateMode::to_open_flags(self : CreateMode) -> OpenFlags {
+  match self {
+    OpenExisting => OpenFlags::new()
+    TruncateExisting => OpenFlags::new() |> OpenFlags::set(Trunc)
+    OpenOrCreate => OpenFlags::new() |> OpenFlags::set(Create)
+    CreateOrTruncate =>
+      OpenFlags::new() |> OpenFlags::set(Create) |> OpenFlags::set(Trunc)
+    CreateNew =>
+      OpenFlags::new() |> OpenFlags::set(Create) |> OpenFlags::set(Excl)
+  }
 }
 
 ///|

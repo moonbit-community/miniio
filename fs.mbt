@@ -23,12 +23,16 @@ pub fn open(
   path : StringView,
   mode? : Mode = ReadOnly,
   append? : Bool = false,
-  create? : Bool = false,
-  truncate? : Bool = false,
+  create_mode? : CreateMode = OpenExisting,
 ) -> File raise Errno {
   {
     raw: wrap(() => {
-      @raw.open(path, mode=mode.to_raw(), append~, create~, truncate~)
+      @raw.open(
+        path,
+        mode=mode.to_raw(),
+        append~,
+        create_mode=create_mode.to_raw(),
+      )
     }),
     read_buf: @io.ReaderBuffer::new(),
   }
@@ -146,9 +150,36 @@ pub fn write_file(
   path : StringView,
   data : &@io.Data,
   append? : Bool = false,
-  create? : Bool = false,
-  truncate? : Bool = false,
+  create_mode? : CreateMode,
 ) -> Unit raise Errno {
-  let file = open(path, mode=WriteOnly, append~, create~, truncate~)
+  let create_mode = match create_mode {
+    Some(mode) => mode
+    None if append => OpenOrCreate
+    None => CreateOrTruncate
+  }
+  let file = open(path, mode=WriteOnly, append~, create_mode~)
   with_closed_file(file, file => file.write_all(data.binary()))
+}
+
+///|
+pub fn read_text_file(path : StringView) -> String raise Errno {
+  let data = read_file(path)
+  data.text() catch {
+    _ => raise IO
+  }
+}
+
+///|
+pub fn write_text_file(
+  path : StringView,
+  text : StringView,
+  append? : Bool = false,
+  create_mode? : CreateMode,
+) -> Unit raise Errno {
+  let create_mode = match create_mode {
+    Some(mode) => mode
+    None if append => OpenOrCreate
+    None => CreateOrTruncate
+  }
+  write_file(path, text, append~, create_mode~)
 }

@@ -29,9 +29,11 @@ pub fn kind(StringView) -> FileKind raise Errno
 
 pub fn mkdir(StringView) -> Unit raise Errno
 
-pub fn open(StringView, mode? : Mode, append? : Bool, create? : Bool, truncate? : Bool) -> File raise Errno
+pub fn open(StringView, mode? : Mode, append? : Bool, create_mode? : CreateMode) -> File raise Errno
 
 pub fn read_file(StringView) -> &@io.Data raise Errno
+
+pub fn read_text_file(StringView) -> String raise Errno
 
 pub fn readdir(StringView, include_hidden? : Bool, sort? : Bool) -> Array[String] raise Errno
 
@@ -45,7 +47,9 @@ pub let stdin : File
 
 pub let stdout : File
 
-pub fn write_file(StringView, &@io.Data, append? : Bool, create? : Bool, truncate? : Bool) -> Unit raise Errno
+pub fn write_file(StringView, &@io.Data, append? : Bool, create_mode? : CreateMode) -> Unit raise Errno
+
+pub fn write_text_file(StringView, StringView, append? : Bool, create_mode? : CreateMode) -> Unit raise Errno
 
 // Errors
 pub(all) suberror Errno {
@@ -130,6 +134,14 @@ pub(all) suberror Errno {
 pub impl Show for Errno
 
 // Types and methods
+pub(all) enum CreateMode {
+  OpenExisting
+  TruncateExisting
+  OpenOrCreate
+  CreateOrTruncate
+  CreateNew
+} derive(Eq, @debug.Debug)
+
 type File
 pub fn File::close(Self) -> Unit raise Errno
 pub fn File::read_all(Self, chunk_size? : Int) -> Bytes raise Errno

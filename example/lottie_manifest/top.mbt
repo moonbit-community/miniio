@@ -40,7 +40,7 @@ fn main {
   let manifest = inspect_lottie(json_text) catch {
     err => abort("parse failed: \{err}")
   }
-  @miniwasi.write_file(output, manifest, create=true, truncate=true) catch {
+  @miniwasi.write_text_file(output, manifest) catch {
     err => abort("write failed: \{err}")
   }
   write_line("manifest=\{output}")

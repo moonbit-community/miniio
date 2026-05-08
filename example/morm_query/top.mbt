@@ -18,7 +18,7 @@ fn main {
     .limit(20)
   let (sql, _params) = @engine.render_query_sql(query)
   let output = args[1]
-  @miniwasi.write_file(output, sql + "\n", create=true, truncate=true) catch {
+  @miniwasi.write_text_file(output, sql + "\n") catch {
     err => abort("write failed: \{err}")
   }
   write_line("sql=\{output}")

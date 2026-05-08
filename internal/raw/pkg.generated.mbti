@@ -14,11 +14,11 @@ pub fn envs() -> Array[(String, String)] raise Errno
 
 pub fn mkdir(StringView) -> Unit raise Errno
 
-pub fn open(StringView, mode? : Mode, append? : Bool, create? : Bool, truncate? : Bool) -> File raise Errno
+pub fn open(StringView, mode? : Mode, append? : Bool, create_mode? : CreateMode) -> File raise Errno
 
 pub fn open_read(StringView) -> File raise Errno
 
-pub fn open_write(StringView, append? : Bool, create? : Bool, truncate? : Bool) -> File raise Errno
+pub fn open_write(StringView, append? : Bool, create_mode? : CreateMode) -> File raise Errno
 
 pub fn preopens() -> Array[String] raise Errno
 
@@ -38,9 +38,9 @@ pub let stdin : File
 
 pub let stdout : File
 
-pub fn write_file(StringView, BytesView, append? : Bool, create? : Bool, truncate? : Bool) -> Unit raise Errno
+pub fn write_file(StringView, BytesView, append? : Bool, create_mode? : CreateMode) -> Unit raise Errno
 
-pub fn write_text_file(StringView, StringView, append? : Bool, create? : Bool, truncate? : Bool) -> Unit raise Errno
+pub fn write_text_file(StringView, StringView, append? : Bool, create_mode? : CreateMode) -> Unit raise Errno
 
 // Errors
 pub(all) suberror Errno {
@@ -124,6 +124,14 @@ pub(all) suberror Errno {
 } derive(Eq, @debug.Debug)
 
 // Types and methods
+pub(all) enum CreateMode {
+  OpenExisting
+  TruncateExisting
+  OpenOrCreate
+  CreateOrTruncate
+  CreateNew
+} derive(Eq, @debug.Debug)
+
 type DirCookie derive(Eq, @debug.Debug)
 
 type DirEnt derive(Eq, @debug.Debug)

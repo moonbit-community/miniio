@@ -34,8 +34,11 @@ the needed memory export for `is_main: true` WASM executables.
 - Read args with `@miniwasi.args_get()`. `args[0]` is the executable name, so
   command arguments start at `args[1]`.
 - Use `@miniwasi.stdin`, `stdout`, and `stderr` for stdio.
+- Use `@miniwasi.read_text_file` and `write_text_file` for UTF-8 text.
 - Use `@miniwasi.read_file`, `write_file`, `open`, `create`, `readdir`, and
-  `rmdir` instead of raw WASIp1 calls.
+  `rmdir` for lower-level file work.
+- Use `create_mode=CreateOrTruncate`, `OpenExisting`, or `CreateNew` instead of
+  boolean creation flags.
 - Treat every filesystem path as guest-visible. WASIp1 has no ambient cwd.
 - Document required preopens. For example, a program reading `data/input.txt`
   needs a run command such as:

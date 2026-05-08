@@ -210,22 +210,15 @@ pub fn open(
   path : StringView,
   mode? : Mode = ReadOnly,
   append? : Bool = false,
-  create? : Bool = false,
-  truncate? : Bool = false,
+  create_mode? : CreateMode = OpenExisting,
 ) -> File raise Errno {
   let (base_fd, relative_path) = resolve_path(path)
-  let mut oflags = OpenFlags::new()
-  if create {
-    oflags = oflags |> OpenFlags::set(Create)
-  }
-  if truncate {
-    oflags = oflags |> OpenFlags::set(Trunc)
-  }
+  let oflags = create_mode.to_open_flags()
   let mut fdflags = FdFlags::new()
   if append {
     fdflags = fdflags |> FdFlags::set(Append)
   }
-  let needs_resize = truncate || mode is WriteOnly || mode is ReadWrite
+  let needs_resize = mode is WriteOnly || mode is ReadWrite
   {
     fd: base_fd.path_open(
       LookupFlags::new(),
@@ -247,15 +240,14 @@ pub fn open_read(path : StringView) -> File raise Errno {
 pub fn open_write(
   path : StringView,
   append? : Bool = false,
-  create? : Bool = false,
-  truncate? : Bool = false,
+  create_mode? : CreateMode = OpenExisting,
 ) -> File raise Errno {
-  open(path, mode=WriteOnly, append~, create~, truncate~)
+  open(path, mode=WriteOnly, append~, create_mode~)
 }
 
 ///|
 pub fn create(path : StringView) -> File raise Errno {
-  open(path, mode=WriteOnly, create=true, truncate=true)
+  open(path, mode=WriteOnly, create_mode=CreateOrTruncate)
 }
 
 ///|
@@ -358,10 +350,14 @@ pub fn write_file(
   path : StringView,
   data : BytesView,
   append? : Bool = false,
-  create? : Bool = false,
-  truncate? : Bool = false,
+  create_mode? : CreateMode,
 ) -> Unit raise Errno {
-  let file = open_write(path, append~, create~, truncate~)
+  let create_mode = match create_mode {
+    Some(mode) => mode
+    None if append => OpenOrCreate
+    None => CreateOrTruncate
+  }
+  let file = open_write(path, append~, create_mode~)
   with_closed_file(file, file => file.write_all(data))
 }
 
@@ -370,8 +366,12 @@ pub fn write_text_file(
   path : StringView,
   text : StringView,
   append? : Bool = false,
-  create? : Bool = false,
-  truncate? : Bool = false,
+  create_mode? : CreateMode,
 ) -> Unit raise Errno {
-  write_file(path, @encoding/utf8.encode(text)[:], append~, create~, truncate~)
+  let create_mode = match create_mode {
+    Some(mode) => mode
+    None if append => OpenOrCreate
+    None => CreateOrTruncate
+  }
+  write_file(path, @encoding/utf8.encode(text)[:], append~, create_mode~)
 }

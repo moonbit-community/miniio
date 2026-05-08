@@ -10,14 +10,38 @@ test "write_file supports create append and truncate" {
   defer ignore(try? @miniwasi.rmdir(dir, recursive=true))
 
   let path = dir + "/sample.txt"
-  @miniwasi.write_file(path, b"hello", create=true)
+  @miniwasi.write_file(path, b"hello")
   inspect(@miniwasi.read_file(path).text(), content="hello")
 
   @miniwasi.write_file(path, b" moonbit", append=true)
   inspect(@miniwasi.read_file(path).text(), content="hello moonbit")
 
-  @miniwasi.write_file(path, b"reset", truncate=true)
+  @miniwasi.write_file(path, b"reset", create_mode=TruncateExisting)
   inspect(@miniwasi.read_file(path).text(), content="reset")
+}
+
+///|
+test "create modes distinguish existing files" {
+  let dir = "minimum_test_create_mode"
+  @miniwasi.remove(dir) catch {
+    Noent => ()
+    Notempty => @miniwasi.rmdir(dir, recursive=true)
+    e => raise e
+  }
+  @miniwasi.mkdir(dir)
+  defer ignore(try? @miniwasi.rmdir(dir, recursive=true))
+
+  let path = dir + "/sample.txt"
+  @miniwasi.write_text_file(path, "first", create_mode=CreateNew)
+  inspect(@miniwasi.read_text_file(path), content="first")
+
+  inspect(
+    try? @miniwasi.write_text_file(path, "second", create_mode=CreateNew),
+    content="Err(Exist)",
+  )
+
+  @miniwasi.write_text_file(path, "second", create_mode=CreateOrTruncate)
+  inspect(@miniwasi.read_text_file(path), content="second")
 }
 
 ///|
@@ -31,9 +55,9 @@ test "readdir sorts and filters hidden entries" {
   @miniwasi.mkdir(dir)
   defer ignore(try? @miniwasi.rmdir(dir, recursive=true))
 
-  @miniwasi.write_file(dir + "/b.txt", b"b", create=true)
-  @miniwasi.write_file(dir + "/a.txt", b"a", create=true)
-  @miniwasi.write_file(dir + "/.hidden", b"h", create=true)
+  @miniwasi.write_file(dir + "/b.txt", b"b")
+  @miniwasi.write_file(dir + "/a.txt", b"a")
+  @miniwasi.write_file(dir + "/.hidden", b"h")
 
   inspect(
     @miniwasi.readdir(dir, include_hidden=false, sort=true),
@@ -57,7 +81,7 @@ test "exists and kind classify file and directory" {
   defer ignore(try? @miniwasi.rmdir(dir, recursive=true))
 
   let path = dir + "/sample.txt"
-  @miniwasi.write_file(path, b"sample", create=true)
+  @miniwasi.write_file(path, b"sample")
 
   assert_true(@miniwasi.exists(dir))
   assert_true(@miniwasi.exists(path))
@@ -84,10 +108,10 @@ test "read_file returns io data" {
   defer ignore(try? @miniwasi.rmdir(dir, recursive=true))
 
   let path = dir + "/sample.txt"
-  @miniwasi.write_file(path, "hello", create=true)
+  @miniwasi.write_text_file(path, "hello")
 
   let data = @miniwasi.read_file(path)
-  inspect(data.text(), content="hello")
+  inspect(@miniwasi.read_text_file(path), content="hello")
   assert_eq(data.binary(), b"hello")
 }
 
@@ -104,10 +128,10 @@ test "remove and recursive rmdir delete created paths" {
 
   let file_path = dir + "/sample.txt"
   let nested_dir = dir + "/nested"
-  @miniwasi.write_file(file_path, b"sample", create=true)
+  @miniwasi.write_file(file_path, b"sample")
   @miniwasi.mkdir(nested_dir)
-  @miniwasi.write_file(nested_dir + "/child.txt", b"child", create=true)
-  @miniwasi.write_file(nested_dir + "/.hidden", b"hidden", create=true)
+  @miniwasi.write_file(nested_dir + "/child.txt", b"child")
+  @miniwasi.write_file(nested_dir + "/.hidden", b"hidden")
 
   @miniwasi.remove(file_path)
   inspect(try? @miniwasi.remove(file_path), content="Err(Noent)")

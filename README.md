@@ -21,7 +21,8 @@ Public API:
 - `readdir`
 - `exists`, `kind`, `is_dir`, `is_file`
 - `read_file`, `write_file`
-- `Errno`, `FileKind`, `Mode`, `SeekFrom`
+- `read_text_file`, `write_text_file`
+- `Errno`, `CreateMode`, `FileKind`, `Mode`, `SeekFrom`
 
 After importing `moonbit-community/miniwasi/io`, `File` also implements sync `Reader` and `Writer`,
 so partial reads and streamed writes are available without exposing raw preview1 calls.
@@ -41,6 +42,25 @@ Still deliberately omitted:
 - detailed metadata/stat helpers such as `mtime`, sizes, permissions, and file descriptor rights
 - symlink, rename, link, walk
 - raw preview1-shaped public calls
+
+Common file patterns:
+
+```moonbit
+let text = @miniwasi.read_text_file("data/input.txt")
+@miniwasi.write_text_file("data/output.txt", text)
+@miniwasi.write_file("data/raw.bin", b"bytes", create_mode=CreateOrTruncate)
+
+let file = @miniwasi.open("data/log.txt", mode=WriteOnly, append=true)
+file.write_text("line\n")
+file.close()
+```
+
+WASIp1 paths are guest paths backed by explicit preopened directories. A program
+that reads `data/input.txt` should be run with a matching preopen, for example:
+
+```sh
+wasmtime run --dir ./data::data _build/wasm/debug/build/<module>/<package>.wasm data/input.txt
+```
 
 The repository root is a Moon workspace. It includes the module itself and
 separate example projects that use versioned dependencies, not local path

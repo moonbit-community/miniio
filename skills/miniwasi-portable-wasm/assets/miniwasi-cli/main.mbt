@@ -21,7 +21,7 @@ fn main {
   }
 
   let path = args[1]
-  let text = @miniwasi.read_file(path).text() catch {
+  let text = @miniwasi.read_text_file(path) catch {
     err => abort("read failed: \{err}")
   }
   write_stdout(text)

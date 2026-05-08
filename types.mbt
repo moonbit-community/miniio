@@ -42,6 +42,26 @@ fn Mode::to_raw(self : Mode) -> @raw.Mode {
 }
 
 ///|
+pub(all) enum CreateMode {
+  OpenExisting
+  TruncateExisting
+  OpenOrCreate
+  CreateOrTruncate
+  CreateNew
+} derive(Eq, Debug)
+
+///|
+fn CreateMode::to_raw(self : CreateMode) -> @raw.CreateMode {
+  match self {
+    OpenExisting => @raw.OpenExisting
+    TruncateExisting => @raw.TruncateExisting
+    OpenOrCreate => @raw.OpenOrCreate
+    CreateOrTruncate => @raw.CreateOrTruncate
+    CreateNew => @raw.CreateNew
+  }
+}
+
+///|
 pub(all) suberror Errno {
   Success
   TooBig
