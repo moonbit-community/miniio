@@ -7,5 +7,4 @@ import {
 
 options(
   "is-main": true,
-  link: { "wasm": { "export-memory-name": "memory" } },
 )
