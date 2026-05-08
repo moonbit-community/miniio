@@ -66,6 +66,12 @@ The external package examples were validated with a recent Moon toolchain. The
 Deno tasks prepend `$HOME/.moon/bin` to `PATH` so they use that toolchain when
 it is installed.
 
+Portable executable skill:
+
+- `skills/miniwasi-portable-wasm`: agent guidance and a small template for
+  building WASIp1 executables with `moonbit-community/miniwasi` installed through
+  `moon add`.
+
 Run the demo package:
 
 ```sh
