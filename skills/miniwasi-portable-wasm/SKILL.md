@@ -58,9 +58,9 @@ wasmtime run --dir ./data::data _build/wasm/debug/build/<module>/<package>.wasm 
 Run these before handoff:
 
 ```sh
-moon check --target wasm
-moon test --target wasm
-moon build --target wasm
+moon check
+moon test
+moon build
 ```
 
-Prefer `moon run <pkg> --target wasm <args>` for quick development tests.
+Prefer `moon run <pkg> <args>` for quick development tests.

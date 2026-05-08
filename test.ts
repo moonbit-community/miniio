@@ -27,7 +27,7 @@ async function runMoonPackage(
   env: Record<string, string> = {},
 ) {
   const output = await new Deno.Command("moon", {
-    args: ["run", pkg, "--target", "wasm", ...args],
+    args: ["run", pkg, ...args],
     stdout: "piped",
     stderr: "piped",
     env,
@@ -41,7 +41,7 @@ async function runMoonPackage(
 
 async function buildMoonPackage(pkg: string) {
   const output = await new Deno.Command("moon", {
-    args: ["build", pkg, "--target", "wasm"],
+    args: ["build", pkg],
     stdout: "piped",
     stderr: "piped",
   }).output();

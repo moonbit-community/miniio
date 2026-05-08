@@ -8,5 +8,5 @@ The example stays on Morm's synchronous query-builder surface. It does not open
 a database, run migrations, or use async engine APIs.
 
 ```bash
-moon run example/morm_query --target wasm query.sql
+moon run example/morm_query query.sql
 ```
