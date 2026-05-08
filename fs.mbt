@@ -125,7 +125,7 @@ pub fn is_file(path : StringView) -> Bool raise Errno {
 pub fn rmdir(path : StringView, recursive? : Bool = false) -> Unit raise Errno {
   if recursive {
     for entry in readdir(path, include_hidden=true, sort=false) {
-      let entry_path = path.to_string() + "/" + entry
+      let entry_path = path.to_owned() + "/" + entry
       remove(entry_path) catch {
         Notempty => rmdir(entry_path, recursive=true)
         e => raise e

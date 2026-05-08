@@ -19,7 +19,7 @@ test "file implements io reader and writer" {
   let dst = FixedArray::make(4, b'\x00')
   let n = reader.read_sync(dst, max_len=2)
   inspect(n, content="2")
-  inspect(reader.read_until_sync(", "), content="Some(\"llo\")")
+  debug_inspect(reader.read_until_sync(", "), content="Some(\"llo\")")
   inspect(reader.read_all_sync().text(), content="moonbit")
   reader.close()
 }

@@ -85,7 +85,7 @@ fn environ_get() -> Array[(String, String)] raise Errno {
     let entry = environ_buf[start:start + len] |> @encoding/utf8.decode_lossy()
     guard entry.split("=").collect() is [key, .. value]
     envs.push(
-      (key.to_string(), value.iter().map(StringView::to_string).join("=")),
+      (key.to_owned(), value.iter().map(fn(part) { part.to_owned() }).join("=")),
     )
   }
   envs

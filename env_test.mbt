@@ -5,12 +5,12 @@ test "environment helpers mirror environ_get" {
 
   for entry in envs {
     let (key, value) = entry
-    assert_eq(env_map.get(key), Some(value))
-    assert_eq(@miniwasi.get_env_var(key), Some(value))
+    inspect(env_map.get(key) == Some(value), content="true")
+    inspect(@miniwasi.get_env_var(key) == Some(value), content="true")
   }
 
-  assert_eq(
-    @miniwasi.get_env_var("__MINIWASI_ENV_KEY_THAT_SHOULD_NOT_EXIST__"),
-    None,
+  let missing = @miniwasi.get_env_var(
+    "__MINIWASI_ENV_KEY_THAT_SHOULD_NOT_EXIST__",
   )
+  inspect(missing is None, content="true")
 }

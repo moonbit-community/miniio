@@ -83,12 +83,12 @@ impl Reader with read_some_sync(self, max_len?) {
   if buf.len() > 0 {
     let buf_bytes = buf.buf().unsafe_reinterpret_as_bytes()
     if max_len is Some(max_len) && max_len < buf.len() {
-      let data = buf_bytes[buf.start():buf.start() + max_len].to_bytes()
+      let data = buf_bytes[buf.start():buf.start() + max_len].to_owned()
       buf.set_start(buf.start() + max_len)
       buf.set_len(buf.len() - max_len)
       return Some(data)
     } else {
-      let data = buf_bytes[buf.start():buf.start() + buf.len()].to_bytes()
+      let data = buf_bytes[buf.start():buf.start() + buf.len()].to_owned()
       buf.clear()
       return Some(data)
     }
@@ -101,9 +101,9 @@ impl Reader with read_some_sync(self, max_len?) {
   if max_len is Some(max_len) && max_len < n {
     buf.set_start(max_len)
     buf.set_len(n - max_len)
-    Some(buf.buf().unsafe_reinterpret_as_bytes()[:max_len].to_bytes())
+    Some(buf.buf().unsafe_reinterpret_as_bytes()[:max_len].to_owned())
   } else {
-    let data = buf.buf().unsafe_reinterpret_as_bytes()[:n].to_bytes()
+    let data = buf.buf().unsafe_reinterpret_as_bytes()[:n].to_owned()
     buf.clear()
     Some(data)
   }

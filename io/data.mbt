@@ -16,7 +16,7 @@ pub impl Data for Bytes with to_bytes(self) {
 
 ///|
 pub impl Data for BytesView with to_bytes(self) {
-  self.to_bytes()
+  self.to_owned()
 }
 
 ///|

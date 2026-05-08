@@ -148,7 +148,7 @@ fn resolve_path(path : StringView) -> (Fd, String) raise Errno {
     if path is ['/', .. path] {
       if dir_name == "/" {
         best_fd = fd
-        best_path = if path == "" { "." } else { path.to_string() }
+        best_path = if path == "" { "." } else { path.to_owned() }
         best_len = 1
         continue
       }
@@ -162,7 +162,7 @@ fn resolve_path(path : StringView) -> (Fd, String) raise Errno {
       if dir_name == "." {
         if best_len < 0 {
           best_fd = fd
-          best_path = if path == "" { "." } else { path.to_string() }
+          best_path = if path == "" { "." } else { path.to_owned() }
           best_len = 0
         }
         continue
@@ -179,7 +179,7 @@ fn resolve_path(path : StringView) -> (Fd, String) raise Errno {
       let len = dir_name.length()
       if len > best_len {
         best_fd = fd
-        best_path = path[dir_name.length() + 1:].to_string()
+        best_path = path[dir_name.length() + 1:].to_owned()
         best_len = len
       }
     }
