@@ -2,6 +2,6 @@
   "tasks": {
     "check": "export PATH=$HOME/.moon/bin:$PATH && moon check --target wasm",
     "info": "export PATH=$HOME/.moon/bin:$PATH && moon info",
-    "test": "export PATH=$HOME/.moon/bin:$PATH && moon test --target wasm && deno test --allow-run=moon --allow-read=. --allow-write=. test.ts"
+    "test": "export PATH=$HOME/.moon/bin:$PATH && moon test --target wasm && deno test --allow-run=moon,wasmtime --allow-read=. --allow-write=. test.ts"
   }
 }
