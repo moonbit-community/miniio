@@ -19,16 +19,28 @@ jobs:
           curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
           echo "$HOME/.moon/bin" >> $GITHUB_PATH
 
+      - name: install deno
+        run: |
+          curl -fsSL https://deno.land/install.sh | sh
+          echo "$HOME/.deno/bin" >> $GITHUB_PATH
+
+      - name: install wasmtime
+        run: |
+          curl -fsSL https://wasmtime.dev/install.sh | bash
+          echo "$HOME/.wasmtime/bin" >> $GITHUB_PATH
+
       - name: post install
         run: |
           moon version --all
           moon update
+          deno --version
+          wasmtime --version
 
       # Add -C if your moon.mod.json or moon.pkg.json is not in the root directory
       - name: prepublish check
         run: |
           moon check
-          moon test
+          deno task test
 
       - name: publish
         env:
