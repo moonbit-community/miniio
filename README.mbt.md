@@ -135,7 +135,14 @@ test "list and remove directories" {
 ## WASIp1 Guest Paths
 
 WASIp1 paths are guest paths backed by explicit preopened directories. A program
-that reads `data/input.txt` should be run with a matching preopen, for example:
+that reads `data/input.txt` needs that guest path to be backed by a host
+directory.
+
+When using `moon run` or `moon test`, Moon's WASI runner is convenient but
+sandboxed: file access is limited to the working/project directory it runs
+from. Put development fixtures and temporary test directories under that tree.
+For host directories outside the current working directory, build the executable
+and run it with explicit preopens:
 
 ```sh
 wasmtime run --dir ./data::data _build/wasm/debug/build/<module>/<package>.wasm data/input.txt

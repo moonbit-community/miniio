@@ -46,6 +46,9 @@ the needed memory export for `is_main: true` WASM executables.
 - Use `create_mode=CreateOrTruncate`, `OpenExisting`, or `CreateNew` instead of
   boolean creation flags.
 - Treat every filesystem path as guest-visible. WASIp1 has no ambient cwd.
+- `moon run` and `moon test` are useful development runners, but their WASI
+  sandbox only exposes the working/project directory. Keep test fixtures under
+  that tree when using Moon's runner.
 - Document required preopens. For example, a program reading `data/input.txt`
   needs a run command such as:
 
