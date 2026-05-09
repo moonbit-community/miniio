@@ -13,11 +13,12 @@ internal.
 - `stdin`, `stdout`, `stderr`
 - `open`, `create`
 - `File::close`
-- `File::read_all`
 - `File::write_all`
 - `File::write_text`
 - `File::seek`
 - `File::tell`
+- `Reader::{read, read_exactly, read_some, read_all, read_until}`
+- `Writer::{write, write_reader}`
 - `mkdir`, `remove_file`, `remove`, `rmdir`
 - `readdir`
 - `exists`, `kind`, `is_dir`, `is_file`
@@ -26,7 +27,7 @@ internal.
 - `read_json_file`, `write_json_file`
 - `Errno`, `CreateMode`, `FileKind`, `Mode`, `SeekFrom`
 
-After importing `moonbit-community/miniwasi/io`, `File` also implements sync
+After importing `moonbit-community/miniwasi/io`, `File` also implements
 `Reader` and `Writer`, so partial reads and streamed writes are available
 without exposing raw preview1 calls.
 
@@ -138,6 +139,32 @@ that reads `data/input.txt` should be run with a matching preopen, for example:
 
 ```sh
 wasmtime run --dir ./data::data _build/wasm/debug/build/<module>/<package>.wasm data/input.txt
+```
+
+## Quick Eval
+
+For quick experiments, `moon run -c` accepts MoonBit's single-file import
+header, so you can try the API without creating a package:
+
+```sh
+printf '{"name":"miniwasi","ok":true}' | moon run -c 'import {
+  "moonbit-community/miniwasi" @wasi,
+  "moonbit-community/miniwasi/io",
+  "moonbitlang/core/json" @json,
+}
+
+fn main {
+  try {
+    let input = @wasi.stdin.read_all().text()
+    let value = @json.parse(input)
+    @wasi.stdout.write_text(value.stringify(indent=2) + "\n")
+  } catch {
+    e => {
+      @wasi.stderr.write_text("jq failed: \{e}\n") catch { _ => () }
+      @wasi.exit(1)
+    }
+  }
+}'
 ```
 
 ## Examples
