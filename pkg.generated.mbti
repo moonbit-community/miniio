@@ -152,7 +152,6 @@ pub(all) enum CreateMode {
 
 type File
 pub fn File::close(Self) -> Unit raise Errno
-pub fn File::read_all(Self, chunk_size? : Int) -> Bytes raise Errno
 pub fn File::seek(Self, Int64, from? : SeekFrom) -> UInt64 raise Errno
 pub fn File::tell(Self) -> UInt64 raise Errno
 pub fn File::write_all(Self, BytesView) -> Unit raise Errno

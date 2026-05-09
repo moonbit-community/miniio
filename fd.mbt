@@ -4,14 +4,6 @@ pub fn File::close(self : File) -> Unit raise Errno {
 }
 
 ///|
-pub fn File::read_all(
-  self : File,
-  chunk_size? : Int = 4096,
-) -> Bytes raise Errno {
-  wrap(() => self.raw.read_all(chunk_size~))
-}
-
-///|
 pub fn File::write_all(self : File, data : BytesView) -> Unit raise Errno {
   wrap(() => self.raw.write_all(data))
 }
@@ -46,6 +38,6 @@ pub impl @io.Reader for File with _direct_read(self, buf, offset~, max_len~) {
 }
 
 ///|
-pub impl @io.Writer for File with write_once_sync(self, data) {
+pub impl @io.Writer for File with write_once(self, data) {
   wrap(() => self.raw.write_once(data))
 }

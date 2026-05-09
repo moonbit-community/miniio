@@ -2,19 +2,19 @@
 pub(open) trait Reader {
   _get_internal_buffer(Self) -> ReaderBuffer
   _direct_read(Self, FixedArray[Byte], offset~ : Int, max_len~ : Int) -> Int raise
-  read_sync(Self, FixedArray[Byte], offset? : Int, max_len? : Int) -> Int raise = _
+  read(Self, FixedArray[Byte], offset? : Int, max_len? : Int) -> Int raise = _
   drop(Self, Int) -> Int raise = _
-  read_exactly_sync(Self, len : Int) -> Bytes raise = _
-  read_some_sync(Self, max_len? : Int) -> Bytes? raise = _
-  read_all_sync(Self) -> &Data raise = _
-  read_until_sync(Self, StringView) -> String? raise = _
+  read_exactly(Self, len : Int) -> Bytes raise = _
+  read_some(Self, max_len? : Int) -> Bytes? raise = _
+  read_all(Self) -> &Data raise = _
+  read_until(Self, StringView) -> String? raise = _
 }
 
 ///|
 pub(all) suberror ReaderClosed derive(Debug, ToJson)
 
 ///|
-impl Reader with read_sync(
+impl Reader with read(
   self,
   dst,
   offset? = 0,
@@ -61,10 +61,10 @@ impl Reader with drop(self, len) {
 }
 
 ///|
-impl Reader with read_exactly_sync(self, len) {
+impl Reader with read_exactly(self, len) {
   let buf = FixedArray::make(len, b'\x00')
   for received = 0; received < len; {
-    let new_received = self.read_sync(
+    let new_received = self.read(
       buf,
       offset=received,
       max_len=len - received,
@@ -78,7 +78,7 @@ impl Reader with read_exactly_sync(self, len) {
 }
 
 ///|
-impl Reader with read_some_sync(self, max_len?) {
+impl Reader with read_some(self, max_len?) {
   let buf = self._get_internal_buffer()
   if buf.len() > 0 {
     let buf_bytes = buf.buf().unsafe_reinterpret_as_bytes()
@@ -110,11 +110,11 @@ impl Reader with read_some_sync(self, max_len?) {
 }
 
 ///|
-impl Reader with read_all_sync(self) {
+impl Reader with read_all(self) {
   let buffer_list = []
   let mut buffer = FixedArray::make(1024, b'\x00')
   let mut offset = 0
-  while self.read_sync(buffer, offset~, max_len=buffer.length() - offset) is n &&
+  while self.read(buffer, offset~, max_len=buffer.length() - offset) is n &&
         n > 0 {
     offset += n
     if offset == buffer.length() {
@@ -133,7 +133,7 @@ impl Reader with read_all_sync(self) {
 }
 
 ///|
-impl Reader with read_until_sync(self, sep) {
+impl Reader with read_until(self, sep) {
   let sep = @utf8.encode(sep)
   let buf = self._get_internal_buffer()
   match buf.find_opt(sep, reader=self) {
