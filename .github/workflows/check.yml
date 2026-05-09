@@ -61,14 +61,14 @@ jobs:
           echo "$HOME/.moon/bin" >> $GITHUB_PATH
 
       - name: install deno
-        run: |
-          curl -fsSL https://deno.land/install.sh | sh
-          echo "$HOME/.deno/bin" >> $GITHUB_PATH
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
 
       - name: install wasmtime
-        run: |
-          curl -fsSL https://wasmtime.dev/install.sh | bash
-          echo "$HOME/.wasmtime/bin" >> $GITHUB_PATH
+        uses: taiki-e/install-action@v2
+        with:
+          tool: wasmtime
 
       - name: post install
         run: |
