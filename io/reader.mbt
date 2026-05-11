@@ -14,12 +14,7 @@ pub(open) trait Reader {
 pub(all) suberror ReaderClosed derive(Debug, ToJson)
 
 ///|
-impl Reader with read(
-  self,
-  dst,
-  offset? = 0,
-  max_len? = dst.length() - offset,
-) {
+impl Reader with read(self, dst, offset? = 0, max_len? = dst.length() - offset) {
   let buf = self._get_internal_buffer()
   if buf.len() > 0 {
     let n = @cmp.minimum(max_len, buf.len())
@@ -64,11 +59,7 @@ impl Reader with drop(self, len) {
 impl Reader with read_exactly(self, len) {
   let buf = FixedArray::make(len, b'\x00')
   for received = 0; received < len; {
-    let new_received = self.read(
-      buf,
-      offset=received,
-      max_len=len - received,
-    )
+    let new_received = self.read(buf, offset=received, max_len=len - received)
     if new_received == 0 {
       raise ReaderClosed
     }

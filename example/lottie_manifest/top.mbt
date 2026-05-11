@@ -1,6 +1,6 @@
 ///|
 fn write_line(line : String) -> Unit {
-  @miniwasi.stdout.write_text(line + "\n") catch {
+  @miniio.stdout.write_text(line + "\n") catch {
     err => abort("stdout failed: \{err}")
   }
 }
@@ -27,20 +27,20 @@ fn inspect_lottie(json : Json) -> String raise {
 
 ///|
 fn main {
-  let args = @miniwasi.args_get() catch { err => abort("args failed: \{err}") }
+  let args = @miniio.args_get() catch { err => abort("args failed: \{err}") }
   if args.length() != 3 {
     write_line("usage: lottie_manifest <input.json> <output.txt>")
     return
   }
   let input = args[1]
   let output = args[2]
-  let json = @miniwasi.read_json_file(input) catch {
+  let json = @miniio.read_json_file(input) catch {
     err => abort("read failed: \{err}")
   }
   let manifest = inspect_lottie(json) catch {
     err => abort("parse failed: \{err}")
   }
-  @miniwasi.write_text_file(output, manifest) catch {
+  @miniio.write_text_file(output, manifest) catch {
     err => abort("write failed: \{err}")
   }
   write_line("manifest=\{output}")

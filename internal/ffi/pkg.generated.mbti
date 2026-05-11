@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "moonbit-community/miniwasi/internal/ffi"
+package "moonbit-community/miniio/internal/ffi"
 
 // Values
 pub fn byte_array2ptr(FixedArray[Byte]) -> Int

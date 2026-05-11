@@ -1,13 +1,13 @@
 ///|
 fn write_line(line : String) -> Unit {
-  @miniwasi.stdout.write_text(line + "\n") catch {
+  @miniio.stdout.write_text(line + "\n") catch {
     err => abort("stdout failed: \{err}")
   }
 }
 
 ///|
 fn main {
-  let args = @miniwasi.args_get() catch { err => abort("args failed: \{err}") }
+  let args = @miniio.args_get() catch { err => abort("args failed: \{err}") }
   if args.length() != 2 {
     write_line("usage: morm_query <output.sql>")
     return
@@ -18,7 +18,7 @@ fn main {
     .limit(20)
   let (sql, _params) = @engine.render_query_sql(query)
   let output = args[1]
-  @miniwasi.write_text_file(output, sql + "\n") catch {
+  @miniio.write_text_file(output, sql + "\n") catch {
     err => abort("write failed: \{err}")
   }
   write_line("sql=\{output}")

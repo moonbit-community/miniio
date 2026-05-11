@@ -1,8 +1,8 @@
 {
-  "name": "moonbit-community/miniwasi-example-lottie-manifest",
+  "name": "moonbit-community/miniio-example-lottie-manifest",
   "version": "0.1.0",
   "deps": {
-    "moonbit-community/miniwasi": "0.1.0",
+    "moonbit-community/miniio": "0.1.0",
     "cg-zhou/moon_lottie": "0.3.0"
   },
   "preferred-target": "wasm"

@@ -1,5 +1,5 @@
 {
-  "name": "moonbit-community/miniio-example-cli-tools",
+  "name": "local/miniio-cli",
   "version": "0.1.0",
   "deps": {
     "moonbit-community/miniio": "0.1.0"

@@ -1,5 +1,5 @@
 import {
-  "moonbit-community/miniwasi",
+  "moonbit-community/miniio",
   "oboard/morm",
   "oboard/morm/engine" @engine,
 }

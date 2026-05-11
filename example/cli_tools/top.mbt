@@ -1,6 +1,6 @@
 ///|
 fn write(data : String) -> Unit {
-  @miniwasi.stdout.write_text(data) catch {
+  @miniio.stdout.write_text(data) catch {
     err => abort("stdout failed: \{err}")
   }
 }
@@ -26,7 +26,7 @@ fn path_join(parent : String, name : String) -> String {
 
 ///|
 fn cat(path : String) -> Unit {
-  let text = @miniwasi.read_text_file(path) catch {
+  let text = @miniio.read_text_file(path) catch {
     err => abort("cat failed: \{err}")
   }
   write(text)
@@ -34,14 +34,14 @@ fn cat(path : String) -> Unit {
 
 ///|
 fn cp(src : String, dst : String) -> Unit {
-  @miniwasi.copy_file(src, dst) catch {
+  @miniio.copy_file(src, dst) catch {
     err => abort("cp failed: \{err}")
   }
 }
 
 ///|
 fn ls(path : String) -> Unit {
-  let entries = @miniwasi.readdir(path, sort=true) catch {
+  let entries = @miniio.readdir(path, sort=true) catch {
     err => abort("ls failed: \{err}")
   }
   for entry in entries {
@@ -52,7 +52,7 @@ fn ls(path : String) -> Unit {
 ///|
 fn tree(path : String, indent : String) -> Unit {
   write_line(indent + path)
-  let entries = @miniwasi.readdir(path, sort=true) catch { _ => return }
+  let entries = @miniio.readdir(path, sort=true) catch { _ => return }
   for entry in entries {
     tree(path_join(path, entry), indent + "  ")
   }
@@ -60,7 +60,7 @@ fn tree(path : String, indent : String) -> Unit {
 
 ///|
 fn main {
-  let args = @miniwasi.args_get() catch { err => abort("args failed: \{err}") }
+  let args = @miniio.args_get() catch { err => abort("args failed: \{err}") }
   if args.length() < 3 {
     usage()
     return

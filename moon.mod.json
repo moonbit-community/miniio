@@ -1,5 +1,5 @@
 {
-  "name": "moonbit-community/miniwasi",
+  "name": "moonbit-community/miniio",
   "version": "0.1.0",
   "preferred-target": "wasm"
 }

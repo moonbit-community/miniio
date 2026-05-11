@@ -147,10 +147,7 @@ pub fn rmdir(path : StringView, recursive? : Bool = false) -> Unit raise Errno {
 ///|
 pub fn read_file(path : StringView) -> &@io.Data raise Errno {
   let file = open(path, mode=ReadOnly)
-  with_closed_file(file, file =>
-    file.read_all() catch {
-      _ => raise IO
-    })
+  with_closed_file(file, file => file.read_all() catch { _ => raise IO })
 }
 
 ///|

@@ -1,4 +1,4 @@
-# miniwasi
+# miniio
 
 Portable WASIp1 SDK for MoonBit command-line tools and agent skills. It exposes
 a small, wrapped API over WASIp1 while keeping direct preview1-shaped calls
@@ -9,7 +9,7 @@ internal.
 - `args_get()`
 - `environ_get()`
 - `get_env_var()`, `get_env_vars()`
-- `moonbit-community/miniwasi/io::{Data, Reader, Writer}`
+- `moonbit-community/miniio/io::{Data, Reader, Writer}`
 - `stdin`, `stdout`, `stderr`
 - `open`, `create`
 - `File::close`
@@ -27,7 +27,7 @@ internal.
 - `read_json_file`, `write_json_file`
 - `Errno`, `CreateMode`, `FileKind`, `Mode`, `SeekFrom`
 
-After importing `moonbit-community/miniwasi/io`, `File` also implements
+After importing `moonbit-community/miniio/io`, `File` also implements
 `Reader` and `Writer`, so partial reads and streamed writes are available
 without exposing raw preview1 calls.
 
@@ -58,17 +58,17 @@ be a directory, and `remove(path)` only when accepting either is intentional.
 ///|
 test "copy text between files" {
   let dir = "readme_copy_text"
-  @miniwasi.remove(dir) catch {
+  @miniio.remove(dir) catch {
     Noent => ()
-    Notempty => @miniwasi.rmdir(dir, recursive=true)
+    Notempty => @miniio.rmdir(dir, recursive=true)
     e => raise e
   }
-  @miniwasi.mkdir(dir)
-  defer ignore(try? @miniwasi.rmdir(dir, recursive=true))
+  @miniio.mkdir(dir)
+  defer ignore(try? @miniio.rmdir(dir, recursive=true))
 
-  @miniwasi.write_text_file(dir + "/input.txt", "hello\n")
-  @miniwasi.copy_file(dir + "/input.txt", dir + "/output.txt")
-  inspect(@miniwasi.read_text_file(dir + "/output.txt"), content="hello\n")
+  @miniio.write_text_file(dir + "/input.txt", "hello\n")
+  @miniio.copy_file(dir + "/input.txt", dir + "/output.txt")
+  inspect(@miniio.read_text_file(dir + "/output.txt"), content="hello\n")
 }
 ```
 
@@ -76,18 +76,18 @@ test "copy text between files" {
 ///|
 test "append log file" {
   let dir = "readme_append_log"
-  @miniwasi.remove(dir) catch {
+  @miniio.remove(dir) catch {
     Noent => ()
-    Notempty => @miniwasi.rmdir(dir, recursive=true)
+    Notempty => @miniio.rmdir(dir, recursive=true)
     e => raise e
   }
-  @miniwasi.mkdir(dir)
-  defer ignore(try? @miniwasi.rmdir(dir, recursive=true))
+  @miniio.mkdir(dir)
+  defer ignore(try? @miniio.rmdir(dir, recursive=true))
 
   let path = dir + "/tool.log"
-  @miniwasi.write_text_file(path, "start\n")
-  @miniwasi.write_text_file(path, "done\n", append=true)
-  inspect(@miniwasi.read_text_file(path), content="start\ndone\n")
+  @miniio.write_text_file(path, "start\n")
+  @miniio.write_text_file(path, "done\n", append=true)
+  inspect(@miniio.read_text_file(path), content="start\ndone\n")
 }
 ```
 
@@ -95,19 +95,19 @@ test "append log file" {
 ///|
 test "read and write json" {
   let dir = "readme_json"
-  @miniwasi.remove(dir) catch {
+  @miniio.remove(dir) catch {
     Noent => ()
-    Notempty => @miniwasi.rmdir(dir, recursive=true)
+    Notempty => @miniio.rmdir(dir, recursive=true)
     e => raise e
   }
-  @miniwasi.mkdir(dir)
-  defer ignore(try? @miniwasi.rmdir(dir, recursive=true))
+  @miniio.mkdir(dir)
+  defer ignore(try? @miniio.rmdir(dir, recursive=true))
 
   let path = dir + "/manifest.json"
-  @miniwasi.write_json_file(path, { "name": "miniwasi", "portable": true })
+  @miniio.write_json_file(path, { "name": "miniio", "portable": true })
   inspect(
-    @miniwasi.read_json_file(path).stringify(),
-    content="{\"name\":\"miniwasi\",\"portable\":true}",
+    @miniio.read_json_file(path).stringify(),
+    content="{\"name\":\"miniio\",\"portable\":true}",
   )
 }
 ```
@@ -116,19 +116,19 @@ test "read and write json" {
 ///|
 test "list and remove directories" {
   let dir = "readme_list_remove"
-  @miniwasi.remove(dir) catch {
+  @miniio.remove(dir) catch {
     Noent => ()
-    Notempty => @miniwasi.rmdir(dir, recursive=true)
+    Notempty => @miniio.rmdir(dir, recursive=true)
     e => raise e
   }
-  @miniwasi.mkdir(dir)
+  @miniio.mkdir(dir)
 
-  @miniwasi.write_text_file(dir + "/b.txt", "b")
-  @miniwasi.write_text_file(dir + "/a.txt", "a")
-  inspect(@miniwasi.readdir(dir, sort=true), content="[\"a.txt\", \"b.txt\"]")
+  @miniio.write_text_file(dir + "/b.txt", "b")
+  @miniio.write_text_file(dir + "/a.txt", "a")
+  inspect(@miniio.readdir(dir, sort=true), content="[\"a.txt\", \"b.txt\"]")
 
-  @miniwasi.rmdir(dir, recursive=true)
-  inspect(@miniwasi.exists(dir), content="false")
+  @miniio.rmdir(dir, recursive=true)
+  inspect(@miniio.exists(dir), content="false")
 }
 ```
 
@@ -154,21 +154,21 @@ For quick experiments, `moon run -c` accepts MoonBit's single-file import
 header, so you can try the API without creating a package:
 
 ```sh
-printf '{"name":"miniwasi","ok":true}' | moon run -c 'import {
-  "moonbit-community/miniwasi" @wasi,
-  "moonbit-community/miniwasi/io",
+printf '{"name":"miniio","ok":true}' | moon run -c 'import {
+  "moonbit-community/miniio" @miniio,
+  "moonbit-community/miniio/io",
   "moonbitlang/core/json" @json,
 }
 
 fn main {
   try {
-    let input = @wasi.stdin.read_all().text()
+    let input = @miniio.stdin.read_all().text()
     let value = @json.parse(input)
-    @wasi.stdout.write_text(value.stringify(indent=2) + "\n")
+    @miniio.stdout.write_text(value.stringify(indent=2) + "\n")
   } catch {
     e => {
-      @wasi.stderr.write_text("jq failed: \{e}\n") catch { _ => () }
-      @wasi.exit(1)
+      @miniio.stderr.write_text("jq failed: \{e}\n") catch { _ => () }
+      @miniio.exit(1)
     }
   }
 }'
@@ -202,8 +202,8 @@ it is installed.
 
 Portable executable skill:
 
-- `skills/miniwasi-portable-wasm`: agent guidance and a small template for
-  building WASIp1 executables with `moonbit-community/miniwasi` installed through
+- `skills/miniio-portable-wasm`: agent guidance and a small template for
+  building WASIp1 executables with `moonbit-community/miniio` installed through
   `moon add`.
 
 Run the demo package:

@@ -1,7 +1,7 @@
 # Lottie Manifest Example
 
 This workspace member uses `cg-zhou/moon_lottie@0.3.0` and
-`moonbit-community/miniwasi` through versioned dependencies. It does not use a
+`moonbit-community/miniio` through versioned dependencies. It does not use a
 local path dependency.
 
 The example intentionally uses the `moon_lottie` parser package, not the

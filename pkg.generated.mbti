@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "moonbit-community/miniwasi"
+package "moonbit-community/miniio"
 
 import {
-  "moonbit-community/miniwasi/io",
+  "moonbit-community/miniio/io",
   "moonbitlang/core/debug",
 }
 

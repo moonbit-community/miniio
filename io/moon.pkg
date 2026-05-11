@@ -1,5 +1,5 @@
 import {
-  "moonbit-community/miniwasi/internal/io_buffer" @io_buffer,
+  "moonbit-community/miniio/internal/io_buffer" @io_buffer,
   "moonbitlang/core/cmp",
   "moonbitlang/core/encoding/utf8" @utf8,
   "moonbitlang/core/json",

@@ -1,4 +1,4 @@
 import {
-  "moonbit-community/miniwasi/io" @io,
-  "moonbit-community/miniwasi/internal/raw" @raw,
+  "moonbit-community/miniio/io" @io,
+  "moonbit-community/miniio/internal/raw" @raw,
 }

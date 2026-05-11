@@ -1,6 +1,6 @@
 const textDecoder = new TextDecoder("utf-8");
 const cliToolsWasm =
-  "_build/wasm/debug/build/moonbit-community/miniwasi-example-cli-tools/miniwasi-example-cli-tools.wasm";
+  "_build/wasm/debug/build/moonbit-community/miniio-example-cli-tools/miniio-example-cli-tools.wasm";
 
 function assert(condition: boolean, message: string) {
   if (!condition) {
@@ -63,17 +63,17 @@ async function runWasmtime(args: string[]) {
 
 Deno.test("moon run demo sees args and env", async () => {
   const output = await runMoonPackage("demo", ["alpha", "beta"], {
-    MINIWASI_E2E_TOKEN: "env-value",
+    MINIIO_E2E_TOKEN: "env-value",
   });
 
   assertEquals(output.code, 0, output.stderr);
   assertIncludes(output.stdout, "- alpha\n");
   assertIncludes(output.stdout, "- beta\n");
-  assertIncludes(output.stdout, "- MINIWASI_E2E_TOKEN=env-value\n");
+  assertIncludes(output.stdout, "- MINIIO_E2E_TOKEN=env-value\n");
 });
 
 Deno.test("moon run cli_tools cat reads a file", async () => {
-  const tmpDir = `miniwasi_cli_${crypto.randomUUID()}`;
+  const tmpDir = `miniio_cli_${crypto.randomUUID()}`;
   const file = `${tmpDir}/input.txt`;
   const copied = `${tmpDir}/copied.txt`;
   await Deno.mkdir(tmpDir);
@@ -93,7 +93,7 @@ Deno.test("moon run cli_tools cat reads a file", async () => {
 });
 
 Deno.test("wasmtime preopen maps guest paths", async () => {
-  const tmpDir = `miniwasi_preopen_${crypto.randomUUID()}`;
+  const tmpDir = `miniio_preopen_${crypto.randomUUID()}`;
   await Deno.mkdir(`${tmpDir}/host`, { recursive: true });
   await Deno.writeTextFile(`${tmpDir}/host/input.txt`, "from preopen\n");
   try {
@@ -121,7 +121,7 @@ Deno.test("wasmtime requires a matching preopen", async () => {
 });
 
 Deno.test("wasmtime path resolution uses longest preopen prefix", async () => {
-  const tmpDir = `miniwasi_prefix_${crypto.randomUUID()}`;
+  const tmpDir = `miniio_prefix_${crypto.randomUUID()}`;
   await Deno.mkdir(`${tmpDir}/parent/nested`, { recursive: true });
   await Deno.mkdir(`${tmpDir}/child`, { recursive: true });
   await Deno.writeTextFile(`${tmpDir}/parent/nested/input.txt`, "parent\n");
@@ -146,7 +146,7 @@ Deno.test("wasmtime path resolution uses longest preopen prefix", async () => {
 });
 
 Deno.test("wasmtime absolute guest paths require absolute preopens", async () => {
-  const tmpDir = `miniwasi_absolute_${crypto.randomUUID()}`;
+  const tmpDir = `miniio_absolute_${crypto.randomUUID()}`;
   await Deno.mkdir(`${tmpDir}/host`, { recursive: true });
   await Deno.writeTextFile(`${tmpDir}/host/input.txt`, "absolute\n");
   try {
@@ -178,7 +178,7 @@ Deno.test("wasmtime absolute guest paths require absolute preopens", async () =>
 });
 
 Deno.test("moon run cli_tools ls and tree use sandboxed file ops", async () => {
-  const tmpDir = `miniwasi_tree_${crypto.randomUUID()}`;
+  const tmpDir = `miniio_tree_${crypto.randomUUID()}`;
   await Deno.mkdir(`${tmpDir}/src/nested`, { recursive: true });
   await Deno.writeTextFile(`${tmpDir}/README.txt`, "");
   await Deno.writeTextFile(`${tmpDir}/src/main.mbt`, "");
@@ -208,7 +208,7 @@ Deno.test("moon run cli_tools ls and tree use sandboxed file ops", async () => {
 });
 
 Deno.test("moon run lottie_manifest parses a Lottie file", async () => {
-  const tmpDir = `miniwasi_lottie_${crypto.randomUUID()}`;
+  const tmpDir = `miniio_lottie_${crypto.randomUUID()}`;
   const input = `${tmpDir}/spinner.json`;
   const outputFile = `${tmpDir}/manifest.txt`;
   await Deno.mkdir(tmpDir);
@@ -245,7 +245,7 @@ Deno.test("moon run lottie_manifest parses a Lottie file", async () => {
 });
 
 Deno.test("moon run morm_query writes generated SQL", async () => {
-  const tmpDir = `miniwasi_morm_${crypto.randomUUID()}`;
+  const tmpDir = `miniio_morm_${crypto.randomUUID()}`;
   const outputFile = `${tmpDir}/query.sql`;
   await Deno.mkdir(tmpDir);
   try {

@@ -1,5 +1,5 @@
 import {
-  "moonbit-community/miniwasi",
+  "moonbit-community/miniio",
 }
 
 supported_targets = "wasm"
