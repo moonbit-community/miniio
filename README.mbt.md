@@ -125,7 +125,10 @@ test "list and remove directories" {
 
   @miniio.write_text_file(dir + "/b.txt", "b")
   @miniio.write_text_file(dir + "/a.txt", "a")
-  inspect(@miniio.readdir(dir, sort=true), content="[\"a.txt\", \"b.txt\"]")
+  debug_inspect(
+    @miniio.readdir(dir, sort=true),
+    content="[\"a.txt\", \"b.txt\"]",
+  )
 
   @miniio.rmdir(dir, recursive=true)
   inspect(@miniio.exists(dir), content="false")

@@ -49,7 +49,7 @@ test "create modes distinguish existing files" {
   @miniio.write_text_file(path, "first", create_mode=CreateNew)
   inspect(@miniio.read_text_file(path), content="first")
 
-  inspect(
+  debug_inspect(
     try? @miniio.write_text_file(path, "second", create_mode=CreateNew),
     content="Err(Exist)",
   )
@@ -73,11 +73,11 @@ test "readdir sorts and filters hidden entries" {
   @miniio.write_file(dir + "/a.txt", b"a")
   @miniio.write_file(dir + "/.hidden", b"h")
 
-  inspect(
+  debug_inspect(
     @miniio.readdir(dir, include_hidden=false, sort=true),
     content="[\"a.txt\", \"b.txt\"]",
   )
-  inspect(
+  debug_inspect(
     @miniio.readdir(dir, include_hidden=true, sort=true),
     content="[\"a.txt\", \"b.txt\", \".hidden\"]",
   )
@@ -185,8 +185,8 @@ test "remove and recursive rmdir delete created paths" {
   @miniio.write_file(nested_dir + "/.hidden", b"hidden")
 
   @miniio.remove_file(file_path)
-  inspect(try? @miniio.remove(file_path), content="Err(Noent)")
+  debug_inspect(try? @miniio.remove(file_path), content="Err(Noent)")
 
   @miniio.rmdir(dir, recursive=true)
-  inspect(try? @miniio.rmdir(dir), content="Err(Noent)")
+  debug_inspect(try? @miniio.rmdir(dir), content="Err(Noent)")
 }
