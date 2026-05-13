@@ -2,3 +2,5 @@ import {
   "moonbit-community/miniio/io" @io,
   "moonbit-community/miniio/internal/raw" @raw,
 }
+
+supported_targets = "wasm"

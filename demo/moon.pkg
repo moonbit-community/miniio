@@ -2,6 +2,8 @@ import {
   "moonbit-community/miniio",
 }
 
+supported_targets = "wasm"
+
 import {
 } for "test"
 
