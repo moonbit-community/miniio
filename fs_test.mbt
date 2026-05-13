@@ -14,7 +14,7 @@
 
 ///|
 test "write_file supports create append and truncate" {
-  let dir = "minimum_test_write_file"
+  let dir = "miniio_test_dir_write_file"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)
@@ -36,7 +36,7 @@ test "write_file supports create append and truncate" {
 
 ///|
 test "create modes distinguish existing files" {
-  let dir = "minimum_test_create_mode"
+  let dir = "miniio_test_dir_create_mode"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)
@@ -60,7 +60,7 @@ test "create modes distinguish existing files" {
 
 ///|
 test "readdir sorts and filters hidden entries" {
-  let dir = "minimum_test_readdir"
+  let dir = "miniio_test_dir_readdir"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)
@@ -85,7 +85,7 @@ test "readdir sorts and filters hidden entries" {
 
 ///|
 test "exists and kind classify file and directory" {
-  let dir = "minimum_test_kind"
+  let dir = "miniio_test_dir_kind"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)
@@ -112,7 +112,7 @@ test "exists and kind classify file and directory" {
 
 ///|
 test "read_file returns io data" {
-  let dir = "minimum_test_read_file"
+  let dir = "miniio_test_dir_read_file"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)
@@ -131,7 +131,7 @@ test "read_file returns io data" {
 
 ///|
 test "copy_file copies through reader and writer" {
-  let dir = "minimum_test_copy_file"
+  let dir = "miniio_test_dir_copy_file"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)
@@ -149,7 +149,7 @@ test "copy_file copies through reader and writer" {
 
 ///|
 test "json file helpers read and write json" {
-  let dir = "minimum_test_json_file"
+  let dir = "miniio_test_dir_json_file"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)
@@ -168,7 +168,7 @@ test "json file helpers read and write json" {
 
 ///|
 test "remove and recursive rmdir delete created paths" {
-  let dir = "minimum_test_remove"
+  let dir = "miniio_test_dir_remove"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)

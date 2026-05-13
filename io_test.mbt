@@ -14,7 +14,7 @@
 
 ///|
 test "file implements io reader and writer" {
-  let dir = "minimum_test_io"
+  let dir = "miniio_test_dir_io"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)
@@ -40,7 +40,7 @@ test "file implements io reader and writer" {
 
 ///|
 test "write_reader copies file content" {
-  let dir = "minimum_test_copy"
+  let dir = "miniio_test_dir_copy"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)
