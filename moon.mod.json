@@ -2,7 +2,7 @@
   "name": "moonbit-community/miniio",
   "version": "0.1.0",
   "readme": "README.md",
-  "repository": "https://github.com/moonbit-community/mini-wasi",
+  "repository": "https://github.com/moonbit-community/miniio",
   "license": "Apache-2.0",
   "preferred-target": "wasm"
 }
