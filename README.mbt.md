@@ -1,8 +1,13 @@
 # miniio
 
-Portable WASIp1 SDK for MoonBit command-line tools and agent skills. It exposes
-a small, wrapped API over WASIp1 while keeping direct preview1-shaped calls
-internal.
+MiniIO is a small, portable WASIp1 I/O SDK for MoonBit command-line tools and
+agent skills. It gives MoonBit programs a simple way to work with stdin,
+stdout, stderr, files, directories, arguments, and environment variables while
+keeping raw preview1 calls internal.
+
+Use it when you want a MoonBit executable that runs cleanly under `moon run`,
+`wasmtime`, or another WASIp1 host without tying your code to host-specific file
+and terminal APIs.
 
 ## Public API
 
