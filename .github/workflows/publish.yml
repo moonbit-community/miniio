@@ -14,9 +14,10 @@ jobs:
         with:
           persist-credentials: false
 
+      # Temporary change
       - name: install-ubuntu
         run: |
-          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash -s 'pre-release'
           echo "$HOME/.moon/bin" >> $GITHUB_PATH
 
       - name: install deno
