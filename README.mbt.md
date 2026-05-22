@@ -9,6 +9,18 @@ Use it when you want a MoonBit executable that runs cleanly under `moon run`,
 `wasmtime`, or another WASIp1 host without tying your code to host-specific file
 and terminal APIs.
 
+## ABI compatibility
+
+MiniIO uses inline wasm helpers to pass MoonBit strings, bytes, and arrays to
+WASIp1 calls. MoonBit changed the ABI layout for these values so the data
+pointer no longer needs the old 8-byte offset. This is a breaking change for
+packages that use inline wasm, but it is not something the MoonBit compiler can
+detect at the type level.
+
+Use this package with a MoonBit toolchain that has the updated ABI layout. If an
+older toolchain or older inline-wasm bindings are mixed with MiniIO, programs
+may still compile but fail at runtime with corrupted strings/bytes or traps.
+
 ## Public API
 
 - `args_get()`
