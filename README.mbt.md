@@ -9,6 +9,11 @@ Use it when you want a MoonBit executable that runs cleanly under `moon run`,
 `wasmtime`, or another WASIp1 host without tying your code to host-specific file
 and terminal APIs.
 
+## ABI compatibility
+
+0.1.0 is compatible with MoonBit < 0.9.3
+0.2.0 is compatible with MoonBit >= 0.9.3
+
 ## Public API
 
 - `args_get()`
