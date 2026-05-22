@@ -39,14 +39,14 @@ pub fn malloc(size : Int) -> Int {
 
 ///|
 pub extern "wasm" fn free(position : Int) =
-  #|(func (param i32) local.get 0 i32.const 8 i32.sub call $moonbit.decref)
+  #|(func (param i32) local.get 0 call $moonbit.decref)
 
 ///|
 #owned(bytes)
 pub extern "wasm" fn byte_array2ptr(bytes : FixedArray[Byte]) -> Int =
-  #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.add)
+  #|(func (param i32) (result i32) local.get 0)
 
 ///|
 #owned(bytes)
 pub extern "wasm" fn bytes2ptr(bytes : Bytes) -> Int =
-  #|(func (param i32) (result i32) local.get 0 i32.const 8 i32.add)
+  #|(func (param i32) (result i32) local.get 0)
