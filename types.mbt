@@ -40,19 +40,6 @@ fn SeekFrom::to_raw(self : SeekFrom) -> @raw.SeekFrom {
 }
 
 ///|
-fn @raw.EntryKind::to_file_kind(self : @raw.EntryKind) -> FileKind {
-  match self {
-    @raw.Unknown => Unknown
-    @raw.Regular => Regular
-    @raw.Directory => Directory
-    @raw.SymLink => SymLink
-    @raw.Socket => Socket
-    @raw.BlockDevice => BlockDevice
-    @raw.CharDevice => CharDevice
-  }
-}
-
-///|
 pub(all) enum Mode {
   ReadOnly
   WriteOnly

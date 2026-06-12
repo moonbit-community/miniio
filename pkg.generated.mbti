@@ -27,7 +27,7 @@ pub fn is_dir(StringView) -> Bool raise Errno
 
 pub fn is_file(StringView) -> Bool raise Errno
 
-pub fn kind(StringView, follow_symlink? : Bool) -> FileKind raise Errno
+pub fn kind(StringView) -> FileKind raise Errno
 
 pub fn mkdir(StringView) -> Unit raise Errno
 

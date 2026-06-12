@@ -112,34 +112,7 @@ pub fn readdir(
 }
 
 ///|
-fn split_parent_name(path : StringView) -> (String, String) {
-  let path = path.trim_end(chars="/")
-  match path.rev_split_once("/") {
-    Some(("", name)) => ("/", name.to_owned())
-    Some((parent, name)) => (parent.to_owned(), name.to_owned())
-    None => (".", path.to_owned())
-  }
-}
-
-///|
-fn kind_no_follow(path : StringView) -> FileKind raise Errno {
-  let (parent, name) = split_parent_name(path)
-  for entry in wrap(() => @raw.readdir(parent)) {
-    if entry.name() == name {
-      return entry.kind().to_file_kind()
-    }
-  }
-  raise Noent
-}
-
-///|
-pub fn kind(
-  path : StringView,
-  follow_symlink? : Bool = true,
-) -> FileKind raise Errno {
-  if !follow_symlink {
-    return kind_no_follow(path)
-  }
+pub fn kind(path : StringView) -> FileKind raise Errno {
   try {
     ignore(readdir(path, include_hidden=true, sort=false))
     Directory

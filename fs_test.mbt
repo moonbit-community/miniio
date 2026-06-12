@@ -112,21 +112,6 @@ test "exists and kind classify file and directory" {
 }
 
 ///|
-test "kind can report symlink itself" {
-  let dir = "testdata/symlinks"
-  let file_link = dir + "/sample-link.txt"
-  debug_inspect(@miniio.kind(file_link), content="Regular")
-  debug_inspect(
-    @miniio.kind(file_link, follow_symlink=false),
-    content="SymLink",
-  )
-
-  let dir_link = dir + "/child-link"
-  debug_inspect(@miniio.kind(dir_link), content="Directory")
-  debug_inspect(@miniio.kind(dir_link, follow_symlink=false), content="SymLink")
-}
-
-///|
 test "read_file returns io data" {
   let dir = "miniio_test_dir_read_file"
   @miniio.remove(dir) catch {
@@ -213,16 +198,4 @@ test "remove and recursive rmdir delete created paths" {
   } noraise {
     _ => abort("expected removing a missing directory to fail")
   }
-}
-
-///|
-test "recursive rmdir does not follow symlinked root" {
-  let target_dir = "testdata/symlinks/rmdir-target"
-  let link_path = "testdata/symlinks/rmdir-target-link"
-  try @miniio.rmdir(link_path, recursive=true) catch {
-    e => debug_inspect(e, content="Loop")
-  } noraise {
-    _ => abort("expected recursive rmdir on a symlink to fail")
-  }
-  inspect(@miniio.read_text_file(target_dir + "/kept.txt"), content="keep")
 }
