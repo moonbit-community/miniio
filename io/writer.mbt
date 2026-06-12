@@ -14,13 +14,13 @@
 
 ///|
 pub(open) trait Writer {
-  write_once(Self, BytesView) -> Int raise
-  write(Self, &Data) -> Unit raise = _
-  write_reader(Self, &Reader) -> Unit raise = _
+  fn write_once(Self, BytesView) -> Int raise
+  fn write(Self, &Data) -> Unit raise = _
+  fn write_reader(Self, &Reader) -> Unit raise = _
 }
 
 ///|
-impl Writer with write(self, data) {
+impl Writer with fn write(self, data) {
   let mut view = data.to_bytesview()
   while view.length() > 0 {
     let written = self.write_once(view)
@@ -29,7 +29,7 @@ impl Writer with write(self, data) {
 }
 
 ///|
-impl Writer with write_reader(self, reader) {
+impl Writer with fn write_reader(self, reader) {
   let buf = reader._get_internal_buffer()
   if buf.len() > 0 {
     let buf_bytes = buf.buf().unsafe_reinterpret_as_bytes()

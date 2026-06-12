@@ -1,6 +1,6 @@
 import {
   "moonbit-community/miniio",
-  "cg-zhou/moon_lottie/lib/parser" @parser,
+  "cg-zhou/moon_lottie/lib/parser",
   "moonbitlang/core/json",
 }
 
