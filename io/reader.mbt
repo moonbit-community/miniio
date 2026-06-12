@@ -14,21 +14,26 @@
 
 ///|
 pub(open) trait Reader {
-  _get_internal_buffer(Self) -> ReaderBuffer
-  _direct_read(Self, FixedArray[Byte], offset~ : Int, max_len~ : Int) -> Int raise
-  read(Self, FixedArray[Byte], offset? : Int, max_len? : Int) -> Int raise = _
-  drop(Self, Int) -> Int raise = _
-  read_exactly(Self, len : Int) -> Bytes raise = _
-  read_some(Self, max_len? : Int) -> Bytes? raise = _
-  read_all(Self) -> &Data raise = _
-  read_until(Self, StringView) -> String? raise = _
+  fn _get_internal_buffer(Self) -> ReaderBuffer
+  fn _direct_read(Self, FixedArray[Byte], offset~ : Int, max_len~ : Int) -> Int raise
+  fn read(Self, FixedArray[Byte], offset? : Int, max_len? : Int) -> Int raise = _
+  fn drop(Self, Int) -> Int raise = _
+  fn read_exactly(Self, len : Int) -> Bytes raise = _
+  fn read_some(Self, max_len? : Int) -> Bytes? raise = _
+  fn read_all(Self) -> &Data raise = _
+  fn read_until(Self, StringView) -> String? raise = _
 }
 
 ///|
 pub(all) suberror ReaderClosed derive(Debug, ToJson)
 
 ///|
-impl Reader with read(self, dst, offset? = 0, max_len? = dst.length() - offset) {
+impl Reader with fn read(
+  self,
+  dst,
+  offset? = 0,
+  max_len? = dst.length() - offset,
+) {
   let buf = self._get_internal_buffer()
   if buf.len() > 0 {
     let n = @cmp.minimum(max_len, buf.len())
@@ -41,7 +46,7 @@ impl Reader with read(self, dst, offset? = 0, max_len? = dst.length() - offset) 
 }
 
 ///|
-impl Reader with drop(self, len) {
+impl Reader with fn drop(self, len) {
   let buf = self._get_internal_buffer()
   if buf.len() >= len {
     buf.drop(len)
@@ -70,7 +75,7 @@ impl Reader with drop(self, len) {
 }
 
 ///|
-impl Reader with read_exactly(self, len) {
+impl Reader with fn read_exactly(self, len) {
   let buf = FixedArray::make(len, b'\x00')
   for received = 0; received < len; {
     let new_received = self.read(buf, offset=received, max_len=len - received)
@@ -83,7 +88,7 @@ impl Reader with read_exactly(self, len) {
 }
 
 ///|
-impl Reader with read_some(self, max_len?) {
+impl Reader with fn read_some(self, max_len?) {
   let buf = self._get_internal_buffer()
   if buf.len() > 0 {
     let buf_bytes = buf.buf().unsafe_reinterpret_as_bytes()
@@ -115,7 +120,7 @@ impl Reader with read_some(self, max_len?) {
 }
 
 ///|
-impl Reader with read_all(self) {
+impl Reader with fn read_all(self) {
   let buffer_list = []
   let mut buffer = FixedArray::make(1024, b'\x00')
   let mut offset = 0
@@ -138,7 +143,7 @@ impl Reader with read_all(self) {
 }
 
 ///|
-impl Reader with read_until(self, sep) {
+impl Reader with fn read_until(self, sep) {
   let sep = @utf8.encode(sep)
   let buf = self._get_internal_buffer()
   match buf.find_opt(sep, reader=self) {

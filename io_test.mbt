@@ -21,7 +21,7 @@ test "file implements io reader and writer" {
     e => raise e
   }
   @miniio.mkdir(dir)
-  defer ignore(try? @miniio.rmdir(dir, recursive=true))
+  defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
 
   let path = dir + "/sample.txt"
   let writer = @miniio.create(path)
@@ -47,7 +47,7 @@ test "write_reader copies file content" {
     e => raise e
   }
   @miniio.mkdir(dir)
-  defer ignore(try? @miniio.rmdir(dir, recursive=true))
+  defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
 
   let src_path = dir + "/src.txt"
   let dst_path = dir + "/dst.txt"

@@ -74,7 +74,7 @@ test "copy text between files" {
     e => raise e
   }
   @miniio.mkdir(dir)
-  defer ignore(try? @miniio.rmdir(dir, recursive=true))
+  defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
 
   @miniio.write_text_file(dir + "/input.txt", "hello\n")
   @miniio.copy_file(dir + "/input.txt", dir + "/output.txt")
@@ -92,7 +92,7 @@ test "append log file" {
     e => raise e
   }
   @miniio.mkdir(dir)
-  defer ignore(try? @miniio.rmdir(dir, recursive=true))
+  defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
 
   let path = dir + "/tool.log"
   @miniio.write_text_file(path, "start\n")
@@ -111,7 +111,7 @@ test "read and write json" {
     e => raise e
   }
   @miniio.mkdir(dir)
-  defer ignore(try? @miniio.rmdir(dir, recursive=true))
+  defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
 
   let path = dir + "/manifest.json"
   @miniio.write_json_file(path, { "name": "miniio", "portable": true })

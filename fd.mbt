@@ -42,16 +42,16 @@ pub fn File::tell(self : File) -> UInt64 raise Errno {
 }
 
 ///|
-pub impl @io.Reader for File with _get_internal_buffer(self) {
+pub impl @io.Reader for File with fn _get_internal_buffer(self) {
   self.read_buf
 }
 
 ///|
-pub impl @io.Reader for File with _direct_read(self, buf, offset~, max_len~) {
+pub impl @io.Reader for File with fn _direct_read(self, buf, offset~, max_len~) {
   wrap(() => self.raw.read(buf, offset~, max_len~))
 }
 
 ///|
-pub impl @io.Writer for File with write_once(self, data) {
+pub impl @io.Writer for File with fn write_once(self, data) {
   wrap(() => self.raw.write_once(data))
 }

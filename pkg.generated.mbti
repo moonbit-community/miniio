@@ -31,7 +31,7 @@ pub fn kind(StringView) -> FileKind raise Errno
 
 pub fn mkdir(StringView) -> Unit raise Errno
 
-pub fn open(StringView, mode? : Mode, append? : Bool, create_mode? : CreateMode) -> File raise Errno
+pub fn open(StringView, mode? : Mode, append? : Bool, create_mode? : CreateMode, follow_symlink? : Bool) -> File raise Errno
 
 pub fn read_file(StringView) -> &@io.Data raise Errno
 
@@ -39,7 +39,7 @@ pub fn read_json_file(StringView) -> Json raise Errno
 
 pub fn read_text_file(StringView) -> String raise Errno
 
-pub fn readdir(StringView, include_hidden? : Bool, sort? : Bool) -> Array[String] raise Errno
+pub fn readdir(StringView, include_hidden? : Bool, sort? : Bool, follow_symlink? : Bool) -> Array[String] raise Errno
 
 pub fn remove(StringView) -> Unit raise Errno
 

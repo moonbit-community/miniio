@@ -14,7 +14,7 @@ pub fn envs() -> Array[(String, String)] raise Errno
 
 pub fn mkdir(StringView) -> Unit raise Errno
 
-pub fn open(StringView, mode? : Mode, append? : Bool, create_mode? : CreateMode) -> File raise Errno
+pub fn open(StringView, mode? : Mode, append? : Bool, create_mode? : CreateMode, lookup_flags? : LookupFlags) -> File raise Errno
 
 pub fn open_read(StringView) -> File raise Errno
 
@@ -24,9 +24,9 @@ pub fn preopens() -> Array[String] raise Errno
 
 pub fn read_file(StringView) -> Bytes raise Errno
 
-pub fn readdir(StringView, buffer_size? : Int) -> Array[DirEntry] raise Errno
+pub fn readdir(StringView, buffer_size? : Int, lookup_flags? : LookupFlags) -> Array[DirEntry] raise Errno
 
-pub fn readdir_names(StringView, buffer_size? : Int) -> Array[String] raise Errno
+pub fn readdir_names(StringView, buffer_size? : Int, lookup_flags? : LookupFlags) -> Array[String] raise Errno
 
 pub fn remove_dir(StringView) -> Unit raise Errno
 
@@ -177,6 +177,8 @@ type FileType derive(Eq, @debug.Debug)
 type Inode derive(Eq, @debug.Debug)
 
 type LookupFlags derive(Eq, @debug.Debug)
+pub fn LookupFlags::new() -> Self
+pub fn LookupFlags::symlink_follow(Self) -> Self
 
 pub(all) enum Mode {
   ReadOnly

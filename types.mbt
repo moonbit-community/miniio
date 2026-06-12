@@ -157,7 +157,7 @@ pub(all) suberror Errno {
 } derive(Eq, Debug)
 
 ///|
-pub impl Show for Errno with to_string(self) {
+pub impl Show for Errno with fn to_string(self) {
   match self {
     Success => "Success"
     TooBig => "TooBig"
@@ -240,7 +240,7 @@ pub impl Show for Errno with to_string(self) {
 }
 
 ///|
-pub impl Show for Errno with output(self, logger) {
+pub impl Show for Errno with fn output(self, logger) {
   logger.write_string(self.to_string())
 }
 
