@@ -85,6 +85,62 @@ test "readdir sorts and filters hidden entries" {
 }
 
 ///|
+test "open follows symlink by default and can reject symlink" {
+  let target = "miniio_test_symlink_target.txt"
+  let link = "testdata/symlinks/file-link"
+  @miniio.remove(target) catch {
+    Noent => ()
+    e => raise e
+  }
+  defer (@miniio.remove(target) catch { _ => () })
+
+  @miniio.write_text_file(target, "target")
+  inspect(@miniio.read_text_file(link), content="target")
+
+  let file = @miniio.create(link)
+  file.write_text("created through link")
+  file.close()
+  inspect(@miniio.read_text_file(target), content="created through link")
+
+  try {
+    let file = @miniio.open(link, follow_symlink=false)
+    file.close()
+    abort("expected opening a symlink with follow_symlink=false to fail")
+  } catch {
+    Loop => ()
+    e => raise e
+  }
+}
+
+///|
+test "readdir follows directory symlink by default and can reject symlink" {
+  let dir = "miniio_test_symlink_target_dir"
+  let link = "testdata/symlinks/dir-link"
+  @miniio.remove(dir) catch {
+    Noent => ()
+    Notempty => @miniio.rmdir(dir, recursive=true)
+    e => raise e
+  }
+  @miniio.mkdir(dir)
+  defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
+
+  @miniio.write_text_file(dir + "/visible.txt", "visible")
+  @miniio.write_text_file(dir + "/.hidden", "hidden")
+
+  debug_inspect(
+    @miniio.readdir(link, include_hidden=false, sort=true),
+    content="[\"visible.txt\"]",
+  )
+  try {
+    ignore(@miniio.readdir(link, follow_symlink=false))
+    abort("expected reading a symlink with follow_symlink=false to fail")
+  } catch {
+    Loop => ()
+    e => raise e
+  }
+}
+
+///|
 test "exists and kind classify file and directory" {
   let dir = "miniio_test_dir_kind"
   @miniio.remove(dir) catch {
@@ -198,4 +254,26 @@ test "remove and recursive rmdir delete created paths" {
   } noraise {
     _ => abort("expected removing a missing directory to fail")
   }
+}
+
+///|
+test "recursive rmdir does not follow symlink root" {
+  let dir = "miniio_test_symlink_target_dir"
+  let link = "testdata/symlinks/dir-link"
+  @miniio.remove(dir) catch {
+    Noent => ()
+    Notempty => @miniio.rmdir(dir, recursive=true)
+    e => raise e
+  }
+  @miniio.mkdir(dir)
+  defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
+
+  @miniio.write_text_file(dir + "/target.txt", "keep")
+  try @miniio.rmdir(link, recursive=true) catch {
+    Loop | Notdir => ()
+    e => raise e
+  } noraise {
+    _ => abort("expected recursive rmdir on a symlink root to fail")
+  }
+  inspect(@miniio.read_text_file(dir + "/target.txt"), content="keep")
 }
