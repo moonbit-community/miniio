@@ -38,14 +38,21 @@ pub fn open(
   mode? : Mode = ReadOnly,
   append? : Bool = false,
   create_mode? : CreateMode = OpenExisting,
+  follow_symlink? : Bool = true,
 ) -> File raise Errno {
   {
     raw: wrap(() => {
+      let lookup_flags = if follow_symlink {
+        @raw.LookupFlags::new().symlink_follow()
+      } else {
+        @raw.LookupFlags::new()
+      }
       @raw.open(
         path,
         mode=mode.to_raw(),
         append~,
         create_mode=create_mode.to_raw(),
+        lookup_flags~,
       )
     }),
     read_buf: @io.ReaderBuffer::new(),
@@ -85,8 +92,14 @@ pub fn readdir(
   path : StringView,
   include_hidden? : Bool = true,
   sort? : Bool = false,
+  follow_symlink? : Bool = true,
 ) -> Array[String] raise Errno {
-  let result = wrap(() => @raw.readdir_names(path))
+  let lookup_flags = if follow_symlink {
+    @raw.LookupFlags::new().symlink_follow()
+  } else {
+    @raw.LookupFlags::new()
+  }
+  let result = wrap(() => @raw.readdir_names(path, lookup_flags~))
   let result = if include_hidden {
     result
   } else {

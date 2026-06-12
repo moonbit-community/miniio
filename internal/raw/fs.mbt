@@ -225,6 +225,7 @@ pub fn open(
   mode? : Mode = ReadOnly,
   append? : Bool = false,
   create_mode? : CreateMode = OpenExisting,
+  lookup_flags? : LookupFlags = LookupFlags::new(),
 ) -> File raise Errno {
   let (base_fd, relative_path) = resolve_path(path)
   let oflags = create_mode.to_open_flags()
@@ -235,7 +236,7 @@ pub fn open(
   let needs_resize = mode is WriteOnly || mode is ReadWrite
   {
     fd: base_fd.path_open(
-      LookupFlags::new(),
+      lookup_flags,
       relative_path,
       oflags,
       file_rights(mode, needs_resize),
@@ -265,12 +266,15 @@ pub fn create(path : StringView) -> File raise Errno {
 }
 
 ///|
-fn open_dir(path : StringView) -> Fd raise Errno {
+fn open_dir(
+  path : StringView,
+  lookup_flags? : LookupFlags = LookupFlags::new(),
+) -> Fd raise Errno {
   let (base_fd, relative_path) = resolve_path(path)
   let rights = Rights::new() |> Rights::set(Fd_read) |> Rights::set(Fd_readdir)
   let oflags = OpenFlags::new() |> OpenFlags::set(Directory)
   base_fd.path_open(
-    LookupFlags::new(),
+    lookup_flags,
     relative_path,
     oflags,
     rights,
@@ -301,11 +305,12 @@ pub fn remove_dir(path : StringView) -> Unit raise Errno {
 pub fn readdir(
   path : StringView,
   buffer_size? : Int = 4096,
+  lookup_flags? : LookupFlags = LookupFlags::new(),
 ) -> Array[DirEntry] raise Errno {
   if buffer_size <= 0 {
     raise Inval
   }
-  let fd = open_dir(path)
+  let fd = open_dir(path, lookup_flags~)
   with_closed_fd(fd, fd => {
     let result : Array[DirEntry] = []
     let mut cookie : DirCookie = DirCookie(0)
@@ -345,9 +350,10 @@ pub fn readdir(
 pub fn readdir_names(
   path : StringView,
   buffer_size? : Int = 4096,
+  lookup_flags? : LookupFlags = LookupFlags::new(),
 ) -> Array[String] raise Errno {
   let names = []
-  for entry in readdir(path, buffer_size~) {
+  for entry in readdir(path, buffer_size~, lookup_flags~) {
     names.push(entry.name())
   }
   names

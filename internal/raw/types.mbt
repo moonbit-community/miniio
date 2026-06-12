@@ -391,8 +391,13 @@ fn FdFlags::set(self : FdFlags, flag : FdFlag) -> FdFlags {
 struct LookupFlags(UInt) derive(Eq, Debug)
 
 ///|
-fn LookupFlags::new() -> LookupFlags {
+pub fn LookupFlags::new() -> LookupFlags {
   0
+}
+
+///|
+pub fn LookupFlags::symlink_follow(self : LookupFlags) -> LookupFlags {
+  self.0 | 1
 }
 
 ///|

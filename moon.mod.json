@@ -1,6 +1,6 @@
 {
   "name": "moonbit-community/miniio",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Small, portable WASIp1 I/O SDK for building MoonBit CLI tools and agent skills.",
   "keywords": ["wasi", "wasip1", "io", "cli", "agent"],
   "readme": "README.md",
