@@ -61,7 +61,7 @@ pub fn open(
 
 ///|
 pub fn create(path : StringView) -> File raise Errno {
-  { raw: wrap(() => @raw.create(path)), read_buf: @io.ReaderBuffer::new() }
+  open(path, mode=WriteOnly, create_mode=CreateOrTruncate)
 }
 
 ///|
