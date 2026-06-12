@@ -13,6 +13,11 @@
 // limitations under the License.
 
 ///|
+fn host_symlink_tests_enabled() -> Bool raise Errno {
+  @miniio.get_env_var("RUNNER_OS") != Some("Windows")
+}
+
+///|
 test "write_file supports create append and truncate" {
   let dir = "miniio_test_dir_write_file"
   @miniio.remove(dir) catch {
@@ -86,64 +91,73 @@ test "readdir sorts and filters hidden entries" {
 
 ///|
 test "open follows symlink by default and can reject symlink" {
-  let target = "miniio_test_symlink_target.txt"
-  let link = "testdata/symlinks/file-link"
-  @miniio.remove(target) catch {
-    Noent => ()
-    e => raise e
-  }
-  defer (@miniio.remove(target) catch { _ => () })
+  if host_symlink_tests_enabled() {
+    let target = "miniio_test_symlink_target.txt"
+    let link = "testdata/symlinks/file-link"
+    @miniio.remove(target) catch {
+      Noent => ()
+      e => raise e
+    }
+    defer (@miniio.remove(target) catch { _ => () })
 
-  @miniio.write_text_file(target, "target")
-  try @miniio.read_text_file(link) catch {
-    Noent => ()
-    e => raise e
-  } noraise {
-    content =>
-      // Windows checkouts may materialize symlink fixtures as plain text files.
-      if content == "target" {
-        let file = @miniio.create(link)
-        file.write_text("created through link")
-        file.close()
-        inspect(@miniio.read_text_file(target), content="created through link")
-
-        try {
-          let file = @miniio.open(link, follow_symlink=false)
+    @miniio.write_text_file(target, "target")
+    try @miniio.read_text_file(link) catch {
+      Noent => ()
+      e => raise e
+    } noraise {
+      content =>
+        // Windows checkouts may materialize symlink fixtures as plain text files.
+        if content == "target" {
+          let file = @miniio.create(link)
+          file.write_text("created through link")
           file.close()
-          abort("expected opening a symlink with follow_symlink=false to fail")
-        } catch {
-          _ => ()
+          inspect(
+            @miniio.read_text_file(target),
+            content="created through link",
+          )
+
+          try {
+            let file = @miniio.open(link, follow_symlink=false)
+            file.close()
+            abort(
+              "expected opening a symlink with follow_symlink=false to fail",
+            )
+          } catch {
+            _ => ()
+          }
         }
-      }
+    }
   }
 }
 
 ///|
 test "readdir follows directory symlink by default and can reject symlink" {
-  let dir = "miniio_test_symlink_target_dir"
-  let link = "testdata/symlinks/dir-link"
-  @miniio.remove(dir) catch {
-    Noent => ()
-    Notempty => @miniio.rmdir(dir, recursive=true)
-    e => raise e
-  }
-  @miniio.mkdir(dir)
-  defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
+  if host_symlink_tests_enabled() {
+    let dir = "miniio_test_symlink_target_dir"
+    let link = "testdata/symlinks/dir-link"
+    @miniio.remove(dir) catch {
+      Noent => ()
+      Notempty => @miniio.rmdir(dir, recursive=true)
+      e => raise e
+    }
+    @miniio.mkdir(dir)
+    defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
 
-  @miniio.write_text_file(dir + "/visible.txt", "visible")
-  @miniio.write_text_file(dir + "/.hidden", "hidden")
+    @miniio.write_text_file(dir + "/visible.txt", "visible")
+    @miniio.write_text_file(dir + "/.hidden", "hidden")
 
-  try @miniio.readdir(link, include_hidden=false, sort=true) catch {
-    Noent | Notdir => ()
-    e => raise e
-  } noraise {
-    entries => {
-      debug_inspect(entries, content="[\"visible.txt\"]")
-      try {
-        ignore(@miniio.readdir(link, follow_symlink=false))
-        abort("expected reading a symlink with follow_symlink=false to fail")
-      } catch {
-        _ => ()
+    try @miniio.readdir(link, include_hidden=false, sort=true) catch {
+      Noent | Notdir => ()
+      e => raise e
+    } noraise {
+      entries => {
+        debug_inspect(entries, content="[\"visible.txt\"]")
+        try {
+          ignore(@miniio.readdir(link, follow_symlink=false))
+          abort("expected reading a symlink with follow_symlink=false to fail")
+        } catch {
+          _ => ()
+        }
       }
     }
   }
@@ -267,28 +281,30 @@ test "remove and recursive rmdir delete created paths" {
 
 ///|
 test "recursive rmdir does not follow symlink root" {
-  let dir = "miniio_test_symlink_rmdir_target_dir"
-  let link = "testdata/symlinks/rmdir-dir-link"
-  @miniio.remove(dir) catch {
-    Noent => ()
-    Notempty => @miniio.rmdir(dir, recursive=true)
-    e => raise e
-  }
-  @miniio.mkdir(dir)
-  defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
+  if host_symlink_tests_enabled() {
+    let dir = "miniio_test_symlink_rmdir_target_dir"
+    let link = "testdata/symlinks/rmdir-dir-link"
+    @miniio.remove(dir) catch {
+      Noent => ()
+      Notempty => @miniio.rmdir(dir, recursive=true)
+      e => raise e
+    }
+    @miniio.mkdir(dir)
+    defer (@miniio.rmdir(dir, recursive=true) catch { _ => () })
 
-  @miniio.write_text_file(dir + "/target.txt", "keep")
-  try @miniio.readdir(link, include_hidden=false, sort=true) catch {
-    Noent | Notdir => ()
-    e => raise e
-  } noraise {
-    _ => {
-      try @miniio.rmdir(link, recursive=true) catch {
-        _ => ()
-      } noraise {
-        _ => abort("expected recursive rmdir on a symlink root to fail")
+    @miniio.write_text_file(dir + "/target.txt", "keep")
+    try @miniio.readdir(link, include_hidden=false, sort=true) catch {
+      Noent | Notdir => ()
+      e => raise e
+    } noraise {
+      _ => {
+        try @miniio.rmdir(link, recursive=true) catch {
+          _ => ()
+        } noraise {
+          _ => abort("expected recursive rmdir on a symlink root to fail")
+        }
+        inspect(@miniio.read_text_file(dir + "/target.txt"), content="keep")
       }
-      inspect(@miniio.read_text_file(dir + "/target.txt"), content="keep")
     }
   }
 }
