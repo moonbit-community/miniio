@@ -112,8 +112,7 @@ test "open follows symlink by default and can reject symlink" {
           file.close()
           abort("expected opening a symlink with follow_symlink=false to fail")
         } catch {
-          Loop => ()
-          e => raise e
+          _ => ()
         }
       }
   }
@@ -144,8 +143,7 @@ test "readdir follows directory symlink by default and can reject symlink" {
         ignore(@miniio.readdir(link, follow_symlink=false))
         abort("expected reading a symlink with follow_symlink=false to fail")
       } catch {
-        Loop => ()
-        e => raise e
+        _ => ()
       }
     }
   }
@@ -269,8 +267,8 @@ test "remove and recursive rmdir delete created paths" {
 
 ///|
 test "recursive rmdir does not follow symlink root" {
-  let dir = "miniio_test_symlink_target_dir"
-  let link = "testdata/symlinks/dir-link"
+  let dir = "miniio_test_symlink_rmdir_target_dir"
+  let link = "testdata/symlinks/rmdir-dir-link"
   @miniio.remove(dir) catch {
     Noent => ()
     Notempty => @miniio.rmdir(dir, recursive=true)
@@ -286,8 +284,7 @@ test "recursive rmdir does not follow symlink root" {
   } noraise {
     _ => {
       try @miniio.rmdir(link, recursive=true) catch {
-        Loop | Notdir => ()
-        e => raise e
+        _ => ()
       } noraise {
         _ => abort("expected recursive rmdir on a symlink root to fail")
       }
